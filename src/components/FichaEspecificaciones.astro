@@ -1,0 +1,89 @@
+---
+/**
+ * Ficha técnica de materiales de un servicio, agrupada por rubro.
+ *
+ * Los items que todavía dicen "[COMPLETAR]" en src/data/servicios.json se
+ * muestran marcados como pendientes: así se ve de un vistazo qué falta
+ * cargar antes de publicar, sin que parezcan contenido terminado.
+ */
+import { esPendiente, type GrupoEspecificaciones } from '../lib/contenido';
+
+interface Props {
+  grupos: GrupoEspecificaciones[];
+  /** Oculta los items pendientes (para cuando el sitio salga a producción). */
+  ocultarPendientes?: boolean;
+}
+
+const { grupos, ocultarPendientes = false } = Astro.props;
+
+const visibles = grupos
+  .map((grupo) => ({
+    grupo: grupo.grupo,
+    items: grupo.items.filter((item) => item && (!ocultarPendientes || !esPendiente(item))),
+  }))
+  .filter((grupo) => grupo.items.length > 0);
+---
+
+<div class="ficha">
+  {
+    visibles.map((grupo) => (
+      <section class="ficha__grupo">
+        <h3 class="ficha__titulo">{grupo.grupo}</h3>
+        <ul class="ficha__items" role="list">
+          {grupo.items.map((item) => (
+            <li class:list={[{ pendiente: esPendiente(item) }]}>
+              {esPendiente(item) ? item.replace('[COMPLETAR]', 'Falta cargar:') : item}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .ficha {
+    display: grid;
+    gap: var(--espacio-5);
+  }
+
+  .ficha__grupo {
+    padding: var(--espacio-5);
+    background-color: var(--color-superficie);
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio-md);
+  }
+
+  .ficha__titulo {
+    font-size: var(--texto-xs);
+    font-weight: var(--peso-medio);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-acento-texto);
+    margin-bottom: var(--espacio-3);
+  }
+
+  .ficha__items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-2);
+    padding: 0;
+    list-style: none;
+    font-size: var(--texto-sm);
+  }
+
+  .ficha__items > li {
+    padding-block: var(--espacio-1);
+    border-bottom: var(--borde-fino) solid var(--color-borde);
+  }
+
+  .ficha__items > li:last-child {
+    border-bottom: 0;
+  }
+
+  @media (min-width: 40em) {
+    .ficha {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    }
+  }
+</style>

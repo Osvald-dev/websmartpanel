@@ -1,0 +1,94 @@
+---
+/**
+ * Hueco de imagen para mientras no están los renders, planos y fotos.
+ * Es un dibujo hecho con CSS y SVG: no pesa nada y respeta la proporción
+ * final, así cuando se carguen las imágenes reales el diseño no se mueve.
+ *
+ * Cuando una imagen ya existe se reemplaza este componente por <Image>
+ * de astro:assets en la página correspondiente.
+ */
+interface Props {
+  /** Qué va a ir en este lugar. Se muestra como texto. */
+  etiqueta?: string;
+  /** Dibujo de fondo: casa (renders y fotos) o plano (plantas). */
+  tipo?: 'casa' | 'plano';
+  /** Proporción, en formato CSS (ej.: "4 / 3"). */
+  relacion?: string;
+  /** Fondo oscuro, para usarlo sobre secciones de contraste. */
+  oscuro?: boolean;
+}
+
+const { etiqueta, tipo = 'casa', relacion = '4 / 3', oscuro = false } = Astro.props;
+---
+
+<div
+  class:list={['hueco', { 'hueco--oscuro': oscuro }]}
+  style={`--relacion: ${relacion}`}
+  role="img"
+  aria-label={etiqueta ? `${etiqueta} (imagen pendiente de carga)` : 'Imagen pendiente de carga'}
+>
+  {
+    tipo === 'casa' ? (
+      <svg class="hueco__dibujo" viewBox="0 0 120 80" aria-hidden="true">
+        <path d="M14 46 60 18l46 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+        <path d="M24 44v24h72V44" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+        <rect x="52" y="52" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" />
+        <rect x="32" y="50" width="12" height="9" fill="none" stroke="currentColor" stroke-width="2" />
+        <rect x="76" y="50" width="12" height="9" fill="none" stroke="currentColor" stroke-width="2" />
+      </svg>
+    ) : (
+      <svg class="hueco__dibujo" viewBox="0 0 120 80" aria-hidden="true">
+        <rect x="16" y="14" width="88" height="52" fill="none" stroke="currentColor" stroke-width="2" />
+        <path d="M60 14v52M16 42h44M60 34h44" fill="none" stroke="currentColor" stroke-width="2" />
+        <path d="M38 66v-6M82 42v-6" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3" />
+      </svg>
+    )
+  }
+  {etiqueta && <span class="hueco__texto">{etiqueta}</span>}
+</div>
+
+<style>
+  .hueco {
+    position: relative;
+    display: grid;
+    place-items: center;
+    gap: var(--espacio-2);
+    aspect-ratio: var(--relacion);
+    width: 100%;
+    padding: var(--espacio-4);
+    background-color: var(--marca-800);
+    /* Trama diagonal suave para que se lea como "falta la imagen" */
+    background-image: repeating-linear-gradient(
+      135deg,
+      rgb(255 255 255 / 0.04) 0 0.5rem,
+      transparent 0.5rem 1rem
+    );
+    color: var(--color-texto-suave);
+    overflow: hidden;
+  }
+
+  .hueco--oscuro {
+    background-color: rgb(255 255 255 / 0.06);
+    background-image: repeating-linear-gradient(
+      135deg,
+      rgb(255 255 255 / 0.05) 0 0.5rem,
+      transparent 0.5rem 1rem
+    );
+    color: var(--color-inverso-suave);
+  }
+
+  .hueco__dibujo {
+    width: min(55%, 9rem);
+    height: auto;
+    opacity: 0.5;
+  }
+
+  .hueco__texto {
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-xs);
+    font-weight: var(--peso-medio);
+    letter-spacing: 0.06em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+</style>

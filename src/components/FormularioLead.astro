@@ -1,0 +1,667 @@
+---
+/**
+ * Formulario de cotización "Cotizamos tu hogar personalizado".
+ *
+ * Dos variantes:
+ *  - "hero": solo el paso 1, para el primer pantallazo. En celular muestra
+ *    un único campo de WhatsApp. Al enviarlo guarda el lead parcial y
+ *    despliega el paso 2 del formulario completo de la misma página
+ *    (o lleva al inicio si en esa página no hay uno).
+ *  - "completo": paso 1 + paso 2. Al enviarlo guarda el lead y abre
+ *    WhatsApp con todos los datos escritos en el mensaje.
+ *
+ * Los leads se guardan en Google Sheets vía Apps Script. Mientras
+ * sitio.json tenga "leadsEndpoint": "[COMPLETAR]" el formulario funciona
+ * igual: valida, confirma y abre WhatsApp, sin guardar nada. Al pegar la
+ * URL del Apps Script empieza a guardar sin tocar una línea de código.
+ */
+import { sitio, dato, servicios } from '../lib/sitio';
+
+interface Props {
+  variante?: 'hero' | 'completo';
+  /** Nombre del modelo consultado. Se escribe solo en las páginas de modelo. */
+  modelo?: string;
+  /** Servicio preseleccionado (slug), para las páginas de obra gris y llave en mano. */
+  servicio?: string;
+  /** id del formulario completo, para los enlaces #cotizar. */
+  id?: string;
+}
+
+const { variante = 'completo', modelo, servicio, id } = Astro.props;
+
+const endpoint = dato(sitio.leadsEndpoint) ?? '';
+const esHero = variante === 'hero';
+
+const habitacionesOpciones = ['1', '2', '3', '4 o más'];
+const plazoOpciones = [
+  'Lo antes posible',
+  'En 3 meses',
+  'En 6 meses',
+  'Más adelante',
+  'Solo estoy mirando',
+];
+---
+
+<form
+  class:list={['form', esHero ? 'form--hero' : 'form--completo']}
+  id={id}
+  data-form-lead
+  data-variante={variante}
+  data-endpoint={endpoint}
+  data-wa={sitio.whatsapp.numero}
+  novalidate
+>
+  <!-- Anti-spam: invisible para las personas, lo completan los robots -->
+  <div class="trampa" aria-hidden="true">
+    <label for={`trampa-${variante}`}>No completar</label>
+    <input id={`trampa-${variante}`} type="text" name="_apellido" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <input type="hidden" name="modelo" value={modelo ?? ''} />
+  <input type="hidden" name="origen" value={Astro.url.pathname} />
+
+  <!-- ================= PASO 1 ================= -->
+  <fieldset class="form__paso" data-paso="1">
+    <legend class="form__legend">
+      {esHero ? 'Cotizamos tu hogar personalizado' : 'Paso 1 · Para ubicarte'}
+    </legend>
+
+    <div class:list={['form__campos', { 'form__campos--extra': esHero }]}>
+      <div class="campo campo--terreno">
+        <span class="campo__etiqueta">¿Tenés terreno?</span>
+        <div class="opciones">
+          <label class="opcion">
+            <input type="radio" name="terreno" value="Sí" />
+            <span>Sí</span>
+          </label>
+          <label class="opcion">
+            <input type="radio" name="terreno" value="No todavía" />
+            <span>No todavía</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label class="campo__etiqueta" for={`localidad-${variante}`}>Localidad</label>
+        <input
+          id={`localidad-${variante}`}
+          type="text"
+          name="localidad"
+          autocomplete="address-level2"
+          placeholder="Ej.: Río Ceballos, Córdoba"
+          data-requerido={esHero ? undefined : 'true'}
+          aria-describedby={`error-localidad-${variante}`}
+        />
+        <p class="campo__error" id={`error-localidad-${variante}`} data-error="localidad"></p>
+      </div>
+
+      <div class="campo campo--wa">
+        <label class="campo__etiqueta" for={`whatsapp-${variante}`}>Tu WhatsApp</label>
+        <input
+          id={`whatsapp-${variante}`}
+          type="tel"
+          name="whatsapp"
+          inputmode="tel"
+          autocomplete="tel"
+          placeholder="Ej.: 351 555 1234"
+          data-requerido="true"
+          aria-describedby={`error-whatsapp-${variante}`}
+        />
+        <p class="campo__error" id={`error-whatsapp-${variante}`} data-error="whatsapp"></p>
+      </div>
+    </div>
+
+    <div class="form__acciones">
+      <button class="boton boton--primario" type={esHero ? 'submit' : 'button'} data-continuar>
+        {esHero ? 'Cotizar mi casa' : 'Continuar'}
+      </button>
+      {
+        esHero && (
+          <p class="form__nota">
+            Te escribimos por WhatsApp. Sin compromiso y sin llamadas si no querés.
+          </p>
+        )
+      }
+    </div>
+  </fieldset>
+
+  <!-- ================= PASO 2 ================= -->
+  {
+    !esHero && (
+      <fieldset class="form__paso form__paso--2" data-paso="2" hidden>
+        <legend class="form__legend">Paso 2 · Para cotizarte bien</legend>
+
+        <div class="form__campos">
+          <div class="campo">
+            <label class="campo__etiqueta" for="nombre">Tu nombre</label>
+            <input
+              id="nombre"
+              type="text"
+              name="nombre"
+              autocomplete="name"
+              data-requerido="true"
+              aria-describedby="error-nombre"
+            />
+            <p class="campo__error" id="error-nombre" data-error="nombre"></p>
+          </div>
+
+          <div class="campo">
+            <label class="campo__etiqueta" for="metros">Metros a construir (aprox.)</label>
+            <input
+              id="metros"
+              type="number"
+              name="metros"
+              min="20"
+              max="600"
+              inputmode="numeric"
+              placeholder="Ej.: 72"
+            />
+          </div>
+
+          <div class="campo">
+            <label class="campo__etiqueta" for="habitaciones">Habitaciones</label>
+            <select id="habitaciones" name="habitaciones">
+              <option value="">Elegir</option>
+              {habitacionesOpciones.map((opcion) => (
+                <option value={opcion}>{opcion}</option>
+              ))}
+            </select>
+          </div>
+
+          <div class="campo">
+            <label class="campo__etiqueta" for="servicio">¿Qué te interesa?</label>
+            <select id="servicio" name="servicio">
+              <option value="">Elegir</option>
+              {servicios.map((item) => (
+                <option value={item.texto} selected={servicio === item.slug}>
+                  {item.texto}
+                </option>
+              ))}
+              <option value="Todavía no sé">Todavía no sé</option>
+            </select>
+          </div>
+
+          <div class="campo campo--ancho">
+            <label class="campo__etiqueta" for="plazo">¿Para cuándo querés construir?</label>
+            <select id="plazo" name="plazo">
+              <option value="">Elegir</option>
+              {plazoOpciones.map((opcion) => (
+                <option value={opcion}>{opcion}</option>
+              ))}
+            </select>
+          </div>
+
+          <div class="campo campo--ancho">
+            <label class="campo__etiqueta" for="mensaje">
+              ¿Algo más que quieras contarnos? <span class="campo__opcional">(opcional)</span>
+            </label>
+            <textarea id="mensaje" name="mensaje" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="form__acciones">
+          <button class="boton boton--whatsapp boton--ancho" type="submit">
+            Enviar y abrir WhatsApp
+          </button>
+          <p class="form__nota">
+            Se abre WhatsApp con tus datos ya escritos. Solo tenés que apretar enviar.
+          </p>
+        </div>
+      </fieldset>
+    )
+  }
+
+  <p class="form__estado" data-estado role="status" aria-live="polite"></p>
+</form>
+
+<style>
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-4);
+  }
+
+  .form__paso {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .form__paso--2 {
+    padding-top: var(--espacio-5);
+    border-top: var(--borde-fino) solid var(--color-borde);
+  }
+
+  .form__legend {
+    padding: 0;
+    margin-bottom: var(--espacio-4);
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-md);
+    font-weight: var(--peso-fuerte);
+    color: var(--color-titulo);
+  }
+
+  .form__campos {
+    display: grid;
+    gap: var(--espacio-4);
+  }
+
+  .form__acciones {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-2);
+    margin-top: var(--espacio-5);
+  }
+
+  .form__nota {
+    font-size: var(--texto-xs);
+    color: var(--color-texto-suave);
+  }
+
+  .form__estado {
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-medio);
+  }
+
+  .form__estado:empty {
+    display: none;
+  }
+
+  .form__estado[data-tipo='error'] {
+    color: var(--color-error);
+  }
+
+  /* ---------- Campos ---------- */
+  .campo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-2);
+    min-width: 0;
+  }
+
+  .campo__etiqueta {
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-medio);
+    color: var(--color-titulo);
+  }
+
+  .campo__opcional {
+    font-weight: var(--peso-normal);
+    color: var(--color-texto-suave);
+  }
+
+  .campo :is(input[type='text'], input[type='tel'], input[type='number'], select, textarea) {
+    width: 100%;
+    min-height: var(--tamano-tactil);
+    padding: var(--espacio-3) var(--espacio-4);
+    background-color: var(--color-campo);
+    border: var(--borde-fino) solid var(--color-borde-fuerte);
+    border-radius: var(--radio-sm);
+    font-size: var(--texto-base);
+    transition:
+      border-color var(--transicion-rapida),
+      box-shadow var(--transicion-rapida);
+  }
+
+  .campo textarea {
+    resize: vertical;
+  }
+
+  .campo :is(input, select, textarea):hover,
+  .campo :is(input, select, textarea):focus {
+    border-color: var(--color-acento-texto);
+  }
+
+  .campo ::placeholder {
+    color: var(--color-texto-suave);
+    opacity: 0.7;
+  }
+
+  .campo [aria-invalid='true'] {
+    border-color: var(--color-error);
+    border-width: var(--borde-grueso);
+  }
+
+  .campo__error {
+    font-size: var(--texto-xs);
+    font-weight: var(--peso-medio);
+    color: var(--color-error);
+  }
+
+  .campo__error:empty {
+    display: none;
+  }
+
+  /* Opciones de "¿Tenés terreno?" como pastillas grandes */
+  .opciones {
+    display: flex;
+    gap: var(--espacio-2);
+  }
+
+  .opcion {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--espacio-2);
+    min-height: var(--tamano-tactil);
+    padding-inline: var(--espacio-4);
+    background-color: var(--color-campo);
+    border: var(--borde-fino) solid var(--color-borde-fuerte);
+    border-radius: var(--radio-pildora);
+    font-size: var(--texto-sm);
+    cursor: pointer;
+    transition:
+      border-color var(--transicion-rapida),
+      background-color var(--transicion-rapida);
+  }
+
+  .opcion:has(input:checked) {
+    border-color: var(--color-acento-texto);
+    border-width: var(--borde-grueso);
+    background-color: var(--color-contraste);
+    font-weight: var(--peso-medio);
+  }
+
+  .opcion input {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--color-acento-texto);
+  }
+
+  /* Trampa anti-spam: fuera de la vista pero sin display:none */
+  .trampa {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* ---------- Variante del hero ---------- */
+  /* En celular el hero pide un solo dato: el WhatsApp. */
+  .form--hero .campo--terreno,
+  .form--hero .campo:has(input[name='localidad']) {
+    display: none;
+  }
+
+  @media (min-width: 40em) {
+    .form--hero .campo--terreno,
+    .form--hero .campo:has(input[name='localidad']) {
+      display: flex;
+    }
+
+    .form--hero .form__campos--extra {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .form--hero .campo--terreno {
+      grid-column: 1 / -1;
+    }
+
+    .form--hero .form__acciones {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--espacio-4);
+    }
+
+    .form--hero .form__nota {
+      flex: 1;
+    }
+  }
+
+  /* ---------- Formulario completo en pantallas grandes ---------- */
+  @media (min-width: 40em) {
+    .form--completo .form__campos {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .form--completo .campo--ancho,
+    .form--completo .campo--terreno {
+      grid-column: 1 / -1;
+    }
+
+    .form--completo .form__acciones {
+      align-items: flex-start;
+    }
+
+    .form--completo .boton--ancho {
+      width: auto;
+      min-width: 16rem;
+    }
+  }
+</style>
+
+<script>
+  /** Clave con la que el hero le pasa los datos al formulario completo. */
+  const CLAVE = 'smartpanel:lead';
+
+  type Datos = Record<string, string>;
+
+  const formularios = document.querySelectorAll<HTMLFormElement>('[data-form-lead]');
+  const completo = document.querySelector<HTMLFormElement>('[data-variante="completo"]');
+
+  /** Lee los campos del formulario y descarta los vacíos. */
+  function leer(form: HTMLFormElement): Datos {
+    const datos: Datos = {};
+    new FormData(form).forEach((valor, clave) => {
+      const texto = String(valor).trim();
+      if (texto) datos[clave] = texto;
+    });
+    return datos;
+  }
+
+  function mostrarEstado(form: HTMLFormElement, texto: string, tipo: 'ok' | 'error' = 'ok') {
+    const estado = form.querySelector<HTMLElement>('[data-estado]');
+    if (!estado) return;
+    estado.textContent = texto;
+    estado.dataset.tipo = tipo;
+  }
+
+  function limpiarErrores(contenedor: ParentNode) {
+    contenedor.querySelectorAll<HTMLElement>('[data-error]').forEach((p) => (p.textContent = ''));
+    contenedor
+      .querySelectorAll<HTMLElement>('[aria-invalid="true"]')
+      .forEach((campo) => campo.removeAttribute('aria-invalid'));
+  }
+
+  function marcarError(campo: HTMLElement, mensaje: string) {
+    campo.setAttribute('aria-invalid', 'true');
+    const nombre = campo.getAttribute('name');
+    const destino = campo
+      .closest('form')
+      ?.querySelector<HTMLElement>(`[data-error="${nombre}"]`);
+    if (destino) destino.textContent = mensaje;
+  }
+
+  /** Un WhatsApp argentino válido tiene al menos 8 dígitos útiles. */
+  function telefonoValido(valor: string): boolean {
+    return valor.replace(/\D/g, '').length >= 8;
+  }
+
+  /**
+   * Valida los campos marcados con data-requerido dentro de uno o más pasos.
+   * Devuelve el primer campo con problema, o null si está todo bien.
+   */
+  function validar(...pasos: (HTMLElement | null | undefined)[]): HTMLElement | null {
+    const conError: HTMLElement[] = [];
+
+    pasos.forEach((paso) => {
+      if (!paso || paso.hidden) return;
+
+      paso.querySelectorAll<HTMLInputElement>('[data-requerido="true"]').forEach((campo) => {
+        // Un campo escondido por CSS (el hero en celular) no se valida
+        if (campo.offsetParent === null) return;
+
+        const valor = campo.value.trim();
+        let mensaje = '';
+
+        if (!valor) {
+          mensaje =
+            campo.name === 'whatsapp'
+              ? 'Dejanos tu WhatsApp así te escribimos.'
+              : 'Completá este dato.';
+        } else if (campo.name === 'whatsapp' && !telefonoValido(valor)) {
+          mensaje = 'Revisá el número: faltan dígitos.';
+        }
+
+        if (mensaje) {
+          marcarError(campo, mensaje);
+          conError.push(campo);
+        }
+      });
+    });
+
+    return conError[0] ?? null;
+  }
+
+  /** Guarda el lead en Google Sheets. Si no hay endpoint cargado, no hace nada. */
+  function guardar(endpoint: string, datos: Datos, paso: string) {
+    if (!endpoint) return;
+    const cuerpo = new URLSearchParams({ ...datos, paso, fecha: new Date().toISOString() });
+    // URLSearchParams viaja como application/x-www-form-urlencoded: no dispara
+    // el preflight CORS, así que Apps Script lo recibe en e.parameter.
+    fetch(endpoint, { method: 'POST', body: cuerpo, keepalive: true, mode: 'no-cors' }).catch(
+      () => {
+        /* Si falla el guardado, el visitante igual sigue a WhatsApp. */
+      }
+    );
+  }
+
+  /** Arma el mensaje de WhatsApp con los datos cargados. */
+  function mensajeWhatsApp(datos: Datos): string {
+    const lineas = ['¡Hola Smart Panel! Quiero cotizar mi casa.', ''];
+    const campos: [string, string][] = [
+      ['Nombre', datos.nombre],
+      ['Localidad', datos.localidad],
+      ['Terreno', datos.terreno],
+      ['Metros a construir', datos.metros ? `${datos.metros} m²` : ''],
+      ['Habitaciones', datos.habitaciones],
+      ['Me interesa', datos.servicio],
+      ['Quiero construir', datos.plazo],
+      ['Modelo', datos.modelo],
+      ['Mensaje', datos.mensaje],
+    ];
+    campos.forEach(([etiqueta, valor]) => {
+      if (valor) lineas.push(`${etiqueta}: ${valor}`);
+    });
+    return lineas.join('\n');
+  }
+
+  formularios.forEach((form) => {
+    const variante = form.dataset.variante;
+    const endpoint = form.dataset.endpoint ?? '';
+    const numero = form.dataset.wa ?? '';
+    const paso1 = form.querySelector<HTMLElement>('[data-paso="1"]');
+    const paso2 = form.querySelector<HTMLElement>('[data-paso="2"]');
+    const continuar = form.querySelector<HTMLButtonElement>('[data-continuar]');
+
+    // ---------- Paso 1 → paso 2 (formulario completo) ----------
+    if (variante === 'completo' && continuar && paso1 && paso2) {
+      continuar.addEventListener('click', () => {
+        limpiarErrores(form);
+        const error = validar(paso1);
+        if (error) {
+          error.focus();
+          return;
+        }
+        abrirPaso2();
+      });
+
+      // El hero, al enviarse, pide por acá que se despliegue el paso 2.
+      form.addEventListener('sp:abrir-paso2', () => abrirPaso2());
+    }
+
+    function abrirPaso2() {
+      if (!paso2 || !continuar) return;
+      paso2.hidden = false;
+      continuar.hidden = true;
+      paso2.querySelector<HTMLElement>('input, select, textarea')?.focus();
+    }
+
+    // ---------- Prefill: datos que llegan del hero ----------
+    if (variante === 'completo') {
+      try {
+        const guardado = sessionStorage.getItem(CLAVE);
+        if (guardado) {
+          const datos = JSON.parse(guardado) as Datos;
+          Object.entries(datos).forEach(([clave, valor]) => {
+            const campo = form.elements.namedItem(clave);
+            if (campo instanceof HTMLInputElement || campo instanceof HTMLSelectElement) {
+              campo.value = valor;
+            } else if (campo instanceof RadioNodeList) {
+              campo.value = valor;
+            }
+          });
+          sessionStorage.removeItem(CLAVE);
+          if (datos.whatsapp) abrirPaso2();
+        }
+      } catch {
+        /* sessionStorage puede estar bloqueado: no es grave. */
+      }
+    }
+
+    // ---------- Envío ----------
+    form.addEventListener('submit', (evento) => {
+      evento.preventDefault();
+      limpiarErrores(form);
+
+      // Si la trampa anti-spam está completa, es un robot: no se envía nada.
+      const trampa = form.elements.namedItem('_apellido');
+      if (trampa instanceof HTMLInputElement && trampa.value) {
+        mostrarEstado(form, 'Listo, gracias.');
+        return;
+      }
+
+      // En el formulario completo se revisan los dos pasos juntos.
+      const error = variante === 'hero' ? validar(paso1) : validar(paso1, paso2);
+      if (error) {
+        error.focus();
+        mostrarEstado(form, 'Falta un dato para seguir.', 'error');
+        return;
+      }
+
+      const datos = leer(form);
+
+      // ----- Hero: guarda el lead parcial y despliega el paso 2 -----
+      if (variante === 'hero') {
+        guardar(endpoint, datos, 'parcial');
+        try {
+          sessionStorage.setItem(CLAVE, JSON.stringify(datos));
+        } catch {
+          /* sin sessionStorage igual se puede seguir a mano */
+        }
+
+        if (completo) {
+          Object.entries(datos).forEach(([clave, valor]) => {
+            const campo = completo.elements.namedItem(clave);
+            if (campo instanceof HTMLInputElement || campo instanceof HTMLSelectElement) {
+              campo.value = valor;
+            } else if (campo instanceof RadioNodeList) {
+              campo.value = valor;
+            }
+          });
+          // Se despliega el paso 2 sin re-validar el paso 1: en celular el
+          // hero pide solo el WhatsApp, y la localidad se completa abajo.
+          completo.dispatchEvent(new Event('sp:abrir-paso2'));
+          completo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          mostrarEstado(form, 'Perfecto. Completá los últimos datos acá abajo.');
+        } else {
+          window.location.href = '/#cotizar';
+        }
+        return;
+      }
+
+      // ----- Completo: guarda el lead y abre WhatsApp -----
+      const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensajeWhatsApp(datos))}`;
+      // Se abre primero (dentro del clic) para que no lo bloquee el navegador.
+      const ventana = window.open(url, '_blank', 'noopener');
+      guardar(endpoint, datos, 'completo');
+      mostrarEstado(form, 'Listo. Te abrimos WhatsApp con tus datos escritos.');
+      form.reset();
+      if (!ventana) window.location.href = url;
+    });
+  });
+</script>

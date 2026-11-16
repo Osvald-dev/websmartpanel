@@ -1,0 +1,119 @@
+---
+/**
+ * Sección final de conversión, con el formulario completo.
+ * Lleva el id "cotizar": es el destino de todos los botones
+ * "Cotizar mi casa" y del enlace del header.
+ */
+import FormularioLead from './FormularioLead.astro';
+import { sitio, enlaceWhatsApp } from '../lib/sitio';
+
+interface Props {
+  /** Nombre del modelo consultado, si venimos de una página de modelo. */
+  modelo?: string;
+  /** Servicio preseleccionado (slug). */
+  servicio?: string;
+  titulo?: string;
+  bajada?: string;
+}
+
+const {
+  modelo,
+  servicio,
+  titulo = 'Cotizamos tu hogar personalizado',
+  bajada = 'Contanos dónde querés construir y te mandamos la cotización por WhatsApp. Sin vueltas y sin compromiso.',
+} = Astro.props;
+---
+
+<section class="seccion cotizar" id="cotizar">
+  <div class="contenedor cotizar__grilla">
+    <div class="cotizar__texto">
+      <span class="volanta">Cotización</span>
+      <h2>{titulo}</h2>
+      <p class="encabezado__bajada">{bajada}</p>
+
+      {modelo && <p class="cotizar__modelo">Consulta por el <strong>{modelo}</strong></p>}
+
+      <ul class="cotizar__puntos" role="list">
+        <li>{sitio.horario}.</li>
+        <li>Te decimos qué entra y qué no, sin letra chica.</li>
+        <li>Flete bonificado hasta {sitio.fleteBonificadoKm} km.</li>
+      </ul>
+
+      <p class="cotizar__directo">
+        ¿Preferís escribir directo?
+        <a href={enlaceWhatsApp()} rel="noopener">WhatsApp {sitio.whatsapp.visible}</a>
+      </p>
+    </div>
+
+    <div class="cotizar__caja">
+      <FormularioLead variante="completo" modelo={modelo} servicio={servicio} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .cotizar {
+    background-color: var(--color-superficie-alt);
+  }
+
+  .cotizar__grilla {
+    display: grid;
+    gap: var(--espacio-6);
+  }
+
+  .cotizar__modelo {
+    margin-top: var(--espacio-4);
+    font-size: var(--texto-md);
+  }
+
+  .cotizar__puntos {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-3);
+    margin-top: var(--espacio-5);
+    padding: 0;
+    list-style: none;
+    font-size: var(--texto-sm);
+    color: var(--color-texto-suave);
+  }
+
+  .cotizar__puntos > li {
+    display: grid;
+    grid-template-columns: 0.5rem 1fr;
+    gap: var(--espacio-3);
+    align-items: baseline;
+  }
+
+  .cotizar__puntos > li::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--radio-pildora);
+    background-color: var(--color-acento-texto);
+  }
+
+  .cotizar__directo {
+    margin-top: var(--espacio-5);
+    font-size: var(--texto-sm);
+  }
+
+  .cotizar__caja {
+    padding: var(--espacio-5);
+    background-color: var(--color-superficie);
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio-lg);
+    box-shadow: var(--sombra-md);
+  }
+
+  @media (min-width: 64em) {
+    .cotizar__grilla {
+      grid-template-columns: 1fr 1.1fr;
+      gap: var(--espacio-7);
+      align-items: start;
+    }
+
+    .cotizar__caja {
+      padding: var(--espacio-6);
+    }
+  }
+</style>

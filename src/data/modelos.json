@@ -1,0 +1,884 @@
+{
+  "_instrucciones": "Una ficha por modelo. Cargar o corregir un modelo es editar este archivo, nunca tocar codigo. Campos vacios o en null no se muestran en la web. imagenes.frente: nombre del archivo dentro de src/assets/modelos-renders/. imagenes.planos: lista de planos, cada uno con el nombre del archivo dentro de src/assets/modelos-planos/ y su etiqueta (los duplex llevan dos: planta baja y planta alta). m2Cubiertos y m2Semicubiertos salen de la franja de datos de cada plano; semicubiertoTipo dice si es Galeria o Pergola. precio: dejar en null mientras los precios esten en standby.",
+  "modelos": [
+    {
+      "slug": "a2",
+      "nombre": "A2",
+      "linea": "2-habitaciones",
+      "destacado": false,
+      "habitaciones": 2,
+      "banos": 1,
+      "m2Cubiertos": 43,
+      "m2Semicubiertos": 17,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Estar",
+        "Galería cochera"
+      ],
+      "descripcionCorta": "Dos dormitorios y un ambiente único de cocina, comedor y estar, con galería cochera al costado.",
+      "descripcionLarga": "El A2 concentra la vida diaria en un solo ambiente amplio que reúne cocina, comedor y estar. Los dos dormitorios quedan del otro lado, con el baño entre ambos, y la galería lateral funciona también como cochera.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "a2.webp",
+        "planos": [
+          {
+            "archivo": "planoa2.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "b2",
+      "nombre": "B2",
+      "linea": "2-habitaciones",
+      "destacado": false,
+      "habitaciones": 2,
+      "banos": 2,
+      "m2Cubiertos": 73.61,
+      "m2Semicubiertos": 32.45,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Estar comedor",
+        "Cocina con barra",
+        "Lavadero",
+        "Dormitorio en suite",
+        "Galería"
+      ],
+      "descripcionCorta": "Dos dormitorios, uno en suite, dos baños y un estar comedor amplio con cocina con barra y lavadero.",
+      "descripcionLarga": "El B2 es el dos dormitorios más grande del catálogo. Tiene un dormitorio en suite, un segundo baño completo, cocina con barra desayunadora abierta al estar comedor y lavadero aparte, más una galería generosa.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "b2.webp",
+        "planos": [
+          {
+            "archivo": "planob2.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "c2",
+      "nombre": "C2",
+      "linea": "2-habitaciones",
+      "destacado": false,
+      "habitaciones": 2,
+      "banos": 1,
+      "m2Cubiertos": 35,
+      "m2Semicubiertos": 25,
+      "semicubiertoTipo": "Pérgola",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Estar",
+        "Pergolado"
+      ],
+      "descripcionCorta": "Dos dormitorios y cocina, comedor y estar integrados, con un pergolado lateral de 25 m².",
+      "descripcionLarga": "El C2 es compacto y rendidor: 35 m² cubiertos con dos dormitorios, baño y un ambiente integrado de cocina, comedor y estar. El pergolado al costado casi duplica el espacio de uso en los meses de calor.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "c2.webp",
+        "planos": [
+          {
+            "archivo": "planosc2.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "d2",
+      "nombre": "D2",
+      "linea": "2-habitaciones",
+      "destacado": false,
+      "habitaciones": 2,
+      "banos": 1,
+      "m2Cubiertos": 54,
+      "m2Semicubiertos": 27,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Estar",
+        "Quincho",
+        "Galería"
+      ],
+      "descripcionCorta": "Dos dormitorios, cocina, comedor y estar en línea, y una galería con quincho de punta a punta.",
+      "descripcionLarga": "En el D2 la cocina, el comedor y el estar se suceden a lo largo de la casa, con los dos dormitorios y el baño de un lado. Del otro corre una galería de 27 m² con quincho, pensada para vivirla todo el año.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "d2.webp",
+        "planos": [
+          {
+            "archivo": "planod2.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "e2",
+      "nombre": "E2",
+      "linea": "2-habitaciones",
+      "destacado": false,
+      "habitaciones": 2,
+      "banos": 1,
+      "m2Cubiertos": 68,
+      "m2Semicubiertos": 13,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Estar comedor",
+        "Cocina independiente",
+        "Galería"
+      ],
+      "descripcionCorta": "Dos dormitorios con placard, estar comedor amplio y cocina independiente.",
+      "descripcionLarga": "El E2 separa bien los usos: dos dormitorios con placard y el baño hacia un lado, un estar comedor amplio hacia el otro y la cocina en un ambiente propio. Suma una galería al frente.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "e2.webp",
+        "planos": [
+          {
+            "archivo": "planoe2.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "f2",
+      "nombre": "F2",
+      "linea": "2-habitaciones",
+      "destacado": false,
+      "habitaciones": 2,
+      "banos": 1,
+      "m2Cubiertos": 68,
+      "m2Semicubiertos": 18,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Comedor",
+        "Estar",
+        "Cocina",
+        "Lavadero",
+        "Galería quincho"
+      ],
+      "descripcionCorta": "Dos dormitorios, comedor y estar integrados, cocina con lavadero y galería quincho.",
+      "descripcionLarga": "El F2 tiene los dos dormitorios y el baño agrupados, y un ambiente central de comedor y estar. La cocina va aparte, con su lavadero, y la galería quincho queda conectada directamente al estar.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "f2.webp",
+        "planos": [
+          {
+            "archivo": "planof2.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "g2",
+      "nombre": "G2",
+      "linea": "2-habitaciones",
+      "destacado": false,
+      "habitaciones": 2,
+      "banos": 1,
+      "m2Cubiertos": 55,
+      "m2Semicubiertos": 26,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Living",
+        "Galería"
+      ],
+      "descripcionCorta": "Dos dormitorios, con cocina, comedor y living integrados y una galería de 26 m² al costado.",
+      "descripcionLarga": "El G2 organiza cocina, comedor y living en un solo ambiente que se abre a una galería lateral de 26 m², con los dos dormitorios y el baño del otro lado.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "g2.webp",
+        "planos": []
+      },
+      "notas": ""
+    },
+    {
+      "slug": "h2",
+      "nombre": "H2",
+      "linea": "2-habitaciones",
+      "destacado": false,
+      "habitaciones": 2,
+      "banos": 1,
+      "m2Cubiertos": 60,
+      "m2Semicubiertos": null,
+      "semicubiertoTipo": "",
+      "ambientes": [
+        "Cocina",
+        "Estar comedor"
+      ],
+      "descripcionCorta": "Dos habitaciones, baño y un ambiente de cocina y estar comedor en 60 m² cubiertos.",
+      "descripcionLarga": "El H2 resuelve todo bajo techo: 60 m² cubiertos con dos habitaciones, baño en el medio y un ambiente continuo de cocina y estar comedor.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "h2.webp",
+        "planos": [
+          {
+            "archivo": "h2plano.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "i2",
+      "nombre": "I2",
+      "linea": "2-habitaciones",
+      "destacado": false,
+      "habitaciones": 2,
+      "banos": 1,
+      "m2Cubiertos": 43,
+      "m2Semicubiertos": 17,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Estar",
+        "Galería cochera"
+      ],
+      "descripcionCorta": "Dos dormitorios y cocina, comedor y estar integrados, con galería cochera lateral.",
+      "descripcionLarga": "El I2 reúne cocina, comedor y estar en un único ambiente, con dos dormitorios y el baño entre ambos. La galería lateral de 17 m² sirve también de cochera.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "i2.webp",
+        "planos": [
+          {
+            "archivo": "i2plano.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "j2",
+      "nombre": "J2",
+      "linea": "2-habitaciones",
+      "destacado": false,
+      "habitaciones": 2,
+      "banos": 2,
+      "m2Cubiertos": 54,
+      "m2Semicubiertos": 6,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Living"
+      ],
+      "descripcionCorta": "Dos dormitorios y dos baños, con cocina, comedor y living en un solo ambiente.",
+      "descripcionLarga": "El J2 es de los pocos dos dormitorios con dos baños: uno junto a la cocina y otro entre los dormitorios. Cocina, comedor y living comparten un ambiente amplio y luminoso.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "j2.webp",
+        "planos": [
+          {
+            "archivo": "j2plano.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "a3",
+      "nombre": "A3",
+      "linea": "3-habitaciones",
+      "destacado": true,
+      "habitaciones": 3,
+      "banos": 1,
+      "m2Cubiertos": 73,
+      "m2Semicubiertos": 35,
+      "semicubiertoTipo": "Pérgola",
+      "ambientes": [
+        "Cocina con barra",
+        "Comedor",
+        "Estar",
+        "Pergolado"
+      ],
+      "descripcionCorta": "Tres dormitorios, cocina con barra abierta al comedor y estar, y un pergolado de 35 m².",
+      "descripcionLarga": "El A3 ubica los tres dormitorios en fila y deja el resto de la casa para un gran ambiente de cocina con barra, comedor y estar. El pergolado de 35 m² acompaña todo el largo de ese ambiente.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "a3.webp",
+        "planos": [
+          {
+            "archivo": "planoa3.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "b3",
+      "nombre": "B3",
+      "linea": "3-habitaciones",
+      "destacado": false,
+      "habitaciones": 3,
+      "banos": 2,
+      "m2Cubiertos": 88,
+      "m2Semicubiertos": 22,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Lavadero",
+        "Comedor",
+        "Estar",
+        "Dormitorio en suite",
+        "Galería quincho"
+      ],
+      "descripcionCorta": "Tres dormitorios, uno en suite, dos baños, lavadero y galería quincho.",
+      "descripcionLarga": "El B3 tiene un dormitorio en suite y otros dos con baño propio en el pasillo. La cocina con lavadero, el comedor y el estar se suceden en un ambiente largo, con la galería quincho al costado.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "b3.webp",
+        "planos": [
+          {
+            "archivo": "planob3.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "c3",
+      "nombre": "C3",
+      "linea": "3-habitaciones",
+      "destacado": false,
+      "habitaciones": 3,
+      "banos": 2,
+      "m2Cubiertos": 114,
+      "m2Semicubiertos": 57,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Estar",
+        "Dormitorio en suite con vestidor",
+        "Galería"
+      ],
+      "descripcionCorta": "Tres dormitorios, suite con vestidor, dos baños y una galería de 57 m² que rodea la casa.",
+      "descripcionLarga": "El C3 es el modelo más grande de la línea: 114 m² cubiertos. La suite tiene vestidor y baño propio, hay un segundo baño para los otros dos dormitorios, y la galería de 57 m² toma el lateral y el frente.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "c3.webp",
+        "planos": [
+          {
+            "archivo": "planoc3.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "d3",
+      "nombre": "D3",
+      "linea": "3-habitaciones",
+      "destacado": false,
+      "habitaciones": 3,
+      "banos": 2,
+      "m2Cubiertos": 73,
+      "m2Semicubiertos": null,
+      "semicubiertoTipo": "",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Estar"
+      ],
+      "descripcionCorta": "Tres dormitorios y dos baños en 73 m² cubiertos, con cocina, comedor y estar integrados.",
+      "descripcionLarga": "El D3 aprovecha cada metro: tres dormitorios y dos baños en 73 m², con cocina, comedor y estar en un mismo ambiente. No tiene galería, así que todo el presupuesto va a superficie cubierta.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "d3.webp",
+        "planos": [
+          {
+            "archivo": "planod3.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "e3",
+      "nombre": "E3",
+      "linea": "3-habitaciones",
+      "destacado": false,
+      "habitaciones": 3,
+      "banos": 1,
+      "m2Cubiertos": 73,
+      "m2Semicubiertos": 20,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina con barra",
+        "Comedor",
+        "Estar",
+        "Galería"
+      ],
+      "descripcionCorta": "Tres dormitorios, cocina con barra, comedor y estar integrados, y galería al costado.",
+      "descripcionLarga": "El E3 pone los tres dormitorios de un lado y un ambiente único de cocina con barra, comedor y estar del otro, que se abre a una galería de 20 m².",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "e3.webp",
+        "planos": [
+          {
+            "archivo": "planoe3.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "f3",
+      "nombre": "F3",
+      "linea": "3-habitaciones",
+      "destacado": false,
+      "habitaciones": 3,
+      "banos": 2,
+      "m2Cubiertos": 75,
+      "m2Semicubiertos": 25,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina comedor",
+        "Estar",
+        "Dormitorio en suite",
+        "Galería"
+      ],
+      "descripcionCorta": "Tres dormitorios, uno en suite, dos baños y cocina comedor abierta al estar.",
+      "descripcionLarga": "El F3 suma una suite con baño propio a dos dormitorios con su baño. La cocina comedor y el estar comparten ambiente y salen directo a una galería de 25 m².",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "f3.webp",
+        "planos": [
+          {
+            "archivo": "planof3.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "g3",
+      "nombre": "G3",
+      "linea": "3-habitaciones",
+      "destacado": true,
+      "habitaciones": 3,
+      "banos": 2,
+      "m2Cubiertos": 88,
+      "m2Semicubiertos": 22,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Lavadero",
+        "Comedor",
+        "Estar",
+        "Dormitorio en suite",
+        "Galería quincho"
+      ],
+      "descripcionCorta": "Tres dormitorios, uno en suite, dos baños, lavadero y galería quincho.",
+      "descripcionLarga": "El G3 tiene un dormitorio en suite y un segundo baño para los otros dos. Cocina con lavadero, comedor y estar se suceden en un ambiente largo, junto a la galería quincho.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "g3.webp",
+        "planos": [
+          {
+            "archivo": "g3plano.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "h3",
+      "nombre": "H3",
+      "linea": "3-habitaciones",
+      "destacado": false,
+      "habitaciones": 3,
+      "banos": 1,
+      "m2Cubiertos": 55,
+      "m2Semicubiertos": 26,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Living",
+        "Galería"
+      ],
+      "descripcionCorta": "Tres dormitorios en 55 m² cubiertos, con cocina, comedor y living integrados y galería.",
+      "descripcionLarga": "El H3 es el tres dormitorios más compacto: 55 m² cubiertos. Cocina, comedor y living van en un ambiente, y la galería lateral de 26 m² amplía la casa hacia afuera.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "h3.webp",
+        "planos": [
+          {
+            "archivo": "h3plano.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "i3",
+      "nombre": "I3",
+      "linea": "3-habitaciones",
+      "destacado": false,
+      "habitaciones": 3,
+      "banos": 2,
+      "m2Cubiertos": 75,
+      "m2Semicubiertos": 25,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina comedor",
+        "Estar",
+        "Dormitorio en suite",
+        "Galería"
+      ],
+      "descripcionCorta": "Tres dormitorios, uno en suite, dos baños y cocina comedor abierta al estar.",
+      "descripcionLarga": "El I3 tiene una suite con baño propio, dos dormitorios más con su baño y un ambiente de cocina comedor y estar que se abre a una galería de 25 m².",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "i3.webp",
+        "planos": [
+          {
+            "archivo": "i3plano.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "dp1",
+      "nombre": "DP1",
+      "linea": "duplex",
+      "destacado": true,
+      "habitaciones": 3,
+      "banos": 3,
+      "m2Cubiertos": 121,
+      "m2Semicubiertos": 20,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Comedor",
+        "Estar",
+        "Cocina",
+        "Toilette en planta baja",
+        "Dormitorio en suite",
+        "Cochera cubierta"
+      ],
+      "descripcionCorta": "Duplex de tres dormitorios, uno en suite, con dos baños arriba, toilette abajo y cochera.",
+      "descripcionLarga": "En planta baja el DP1 tiene comedor, estar, cocina, toilette y cochera cubierta. Arriba van los tres dormitorios: una suite con baño propio y otros dos que comparten un baño completo.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "dp1.webp",
+        "planos": [
+          {
+            "archivo": "planobajadp1.webp",
+            "etiqueta": "Planta baja"
+          },
+          {
+            "archivo": "planoaltadp1.webp",
+            "etiqueta": "Planta alta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "dp2",
+      "nombre": "DP2",
+      "linea": "duplex",
+      "destacado": false,
+      "habitaciones": 2,
+      "banos": 2,
+      "m2Cubiertos": 75,
+      "m2Semicubiertos": 19,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Estar",
+        "Cocina comedor",
+        "Baño en cada planta",
+        "Galería"
+      ],
+      "descripcionCorta": "Duplex de dos dormitorios con un baño por planta, estar y cocina comedor abajo.",
+      "descripcionLarga": "El DP2 ocupa poco terreno: abajo tiene estar, cocina comedor, baño y galería; arriba, los dos dormitorios con su baño. Una buena opción para lotes angostos.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "dp2.webp",
+        "planos": [
+          {
+            "archivo": "planobajadp2.webp",
+            "etiqueta": "Planta baja"
+          },
+          {
+            "archivo": "planoaltadp2.webp",
+            "etiqueta": "Planta alta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "ai1",
+      "nombre": "Smart AI 1",
+      "linea": "smart-ai",
+      "destacado": false,
+      "habitaciones": 1,
+      "banos": 1,
+      "m2Cubiertos": 45,
+      "m2Semicubiertos": 20,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Estar",
+        "Antebaño",
+        "Galería"
+      ],
+      "descripcionCorta": "Un dormitorio con placard, baño con antebaño y cocina, comedor y estar integrados.",
+      "descripcionLarga": "El Smart AI 1 es la casa más chica del catálogo: 45 m² cubiertos con un dormitorio con placard, baño con antebaño y un ambiente de cocina, comedor y estar que se abre a una galería de 20 m².",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "ai11.webp",
+        "planos": [
+          {
+            "archivo": "ai1plano.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "ai2",
+      "nombre": "Smart AI 2",
+      "linea": "smart-ai",
+      "destacado": true,
+      "habitaciones": 2,
+      "banos": 1,
+      "m2Cubiertos": 67,
+      "m2Semicubiertos": 8,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Estar",
+        "Vestidor",
+        "Antebaño",
+        "Galería"
+      ],
+      "descripcionCorta": "Dos dormitorios, uno con vestidor, baño con antebaño y cocina, comedor y estar integrados.",
+      "descripcionLarga": "El Smart AI 2 tiene un dormitorio principal con vestidor y un segundo dormitorio con placard. El baño suma antebaño, y la cocina, el comedor y el estar comparten un ambiente con salida a la galería.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "ai22.webp",
+        "planos": [
+          {
+            "archivo": "ai2plano.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "ai3",
+      "nombre": "Smart AI 3",
+      "linea": "smart-ai",
+      "destacado": true,
+      "habitaciones": 3,
+      "banos": 2,
+      "m2Cubiertos": 90,
+      "m2Semicubiertos": 25.5,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Estar",
+        "Comedor",
+        "Cocina",
+        "Antebaños",
+        "Galería"
+      ],
+      "descripcionCorta": "Tres dormitorios con placard y dos baños con antebaño, con estar, comedor y cocina en un ambiente.",
+      "descripcionLarga": "En el Smart AI 3 los tres dormitorios, todos con placard, van sobre un pasillo con dos baños con antebaño. El estar, el comedor y la cocina ocupan un ambiente de punta a punta, junto a una galería de 25,5 m².",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "ai33.webp",
+        "planos": [
+          {
+            "archivo": "ai3plano.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "ai4",
+      "nombre": "Smart AI 4",
+      "linea": "smart-ai",
+      "destacado": false,
+      "habitaciones": 2,
+      "banos": 1,
+      "m2Cubiertos": 75,
+      "m2Semicubiertos": 7,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Comedor",
+        "Estar",
+        "Cocina",
+        "Antebaño"
+      ],
+      "descripcionCorta": "Dos dormitorios con placard, baño con antebaño y comedor, estar y cocina integrados.",
+      "descripcionLarga": "El Smart AI 4 separa la casa en dos: los dormitorios con placard y el baño con antebaño de un lado, y un ambiente amplio de comedor, estar y cocina del otro, con dos ventanales al frente.",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "ai42.webp",
+        "planos": [
+          {
+            "archivo": "ai4plano.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "ai5",
+      "nombre": "Smart AI 5",
+      "linea": "smart-ai",
+      "destacado": true,
+      "habitaciones": 3,
+      "banos": 1,
+      "m2Cubiertos": 70.5,
+      "m2Semicubiertos": 20.5,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Estar",
+        "Antebaño",
+        "Galería"
+      ],
+      "descripcionCorta": "Tres dormitorios con placard, baño con antebaño y cocina, comedor y estar integrados.",
+      "descripcionLarga": "El Smart AI 5 mete tres dormitorios con placard en 70,5 m² cubiertos. La cocina, el comedor y el estar comparten ambiente y salen a una galería de 20,5 m².",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "ai53.webp",
+        "planos": [
+          {
+            "archivo": "ai5plano.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    },
+    {
+      "slug": "ai6",
+      "nombre": "Smart AI 6",
+      "linea": "smart-ai",
+      "destacado": false,
+      "habitaciones": 3,
+      "banos": 2,
+      "m2Cubiertos": 96,
+      "m2Semicubiertos": 34,
+      "semicubiertoTipo": "Galería",
+      "ambientes": [
+        "Cocina",
+        "Comedor",
+        "Estar",
+        "Vestidor",
+        "Antebaño",
+        "Galería"
+      ],
+      "descripcionCorta": "Tres dormitorios, el principal con vestidor, dos baños y una galería de 34 m².",
+      "descripcionLarga": "El Smart AI 6 es el más grande de la línea: 96 m² cubiertos. El dormitorio principal tiene vestidor, hay dos baños con antebaño, y la cocina, el comedor y el estar se abren a una galería de 34 m².",
+      "caracteristicas": [],
+      "plazo": "",
+      "precio": null,
+      "imagenes": {
+        "frente": "ai63.webp",
+        "planos": [
+          {
+            "archivo": "ai6plano.webp",
+            "etiqueta": "Planta"
+          }
+        ]
+      },
+      "notas": ""
+    }
+  ]
+}

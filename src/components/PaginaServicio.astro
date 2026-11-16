@@ -1,0 +1,206 @@
+---
+/**
+ * Cuerpo compartido de las páginas de servicio (/obra-gris/ y
+ * /llave-en-mano/). Las dos páginas son casi iguales: cambian el texto y
+ * la ficha técnica, que salen de src/data/servicios.json.
+ */
+import Migas from './Migas.astro';
+import FichaEspecificaciones from './FichaEspecificaciones.astro';
+import ImagenPlaceholder from './ImagenPlaceholder.astro';
+import SeccionCotizar from './SeccionCotizar.astro';
+import { sitio, enlaceWhatsApp } from '../lib/sitio';
+import { esPendiente, type Servicio } from '../lib/contenido';
+
+interface Props {
+  servicio: Servicio;
+  /** El otro servicio, para el enlace de comparación al final. */
+  otro?: Servicio;
+}
+
+const { servicio, otro } = Astro.props;
+
+const incluye = servicio.incluye.filter(Boolean);
+const noIncluye = servicio.noIncluye.filter(Boolean);
+const mensaje = `¡Hola Smart Panel! Quiero consultar por ${servicio.nombre.toLowerCase()}.`;
+
+/** Deja el texto listo para mostrar: el [COMPLETAR] se vuelve visible. */
+function visible(texto: string): string {
+  return texto.replace('[COMPLETAR]', 'Falta cargar:');
+}
+---
+
+<header class="seccion cabecera">
+  <div class="contenedor">
+    <Migas pasos={[{ texto: 'Inicio', href: '/' }, { texto: servicio.nombre }]} />
+    <span class="volanta">Entrega en {servicio.plazo}</span>
+    <h1>{servicio.titulo}</h1>
+    <p class="encabezado__bajada">{servicio.bajada}</p>
+    <p class="cabecera__para">{servicio.paraQuien}</p>
+
+    <div class="cabecera__acciones">
+      <a class="boton boton--primario" href="#cotizar">Cotizar mi casa</a>
+      <a class="boton boton--whatsapp" href={enlaceWhatsApp(mensaje)} rel="noopener">
+        Preguntar por WhatsApp
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ---------- Qué incluye y qué no ---------- -->
+<section class="seccion">
+  <div class="contenedor incluye">
+    <div>
+      <h2>Qué incluye</h2>
+      <ul class="lista-marcada" role="list">
+        {
+          incluye.map((item) => (
+            <li class:list={[{ pendiente: esPendiente(item) }]}>{visible(item)}</li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div>
+      <h2>Qué no incluye</h2>
+      <ul class="lista-marcada lista-marcada--cruz" role="list">
+        {
+          noIncluye.map((item) => (
+            <li class:list={[{ pendiente: esPendiente(item) }]}>{visible(item)}</li>
+          ))
+        }
+      </ul>
+      <p class="incluye__nota texto-suave">
+        Si algo de esto lo querés incluido, decinos y lo cotizamos aparte.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- Ficha técnica ---------- -->
+<section class="seccion seccion--alt">
+  <div class="contenedor">
+    <div class="encabezado">
+      <span class="volanta">Ficha técnica</span>
+      <h2>Materiales y especificaciones</h2>
+      <p class="encabezado__bajada">
+        Lo que va en cada parte de la casa, rubro por rubro. Sin letra chica: si no está acá, no
+        está incluido.
+      </p>
+    </div>
+
+    <FichaEspecificaciones grupos={servicio.especificaciones} />
+  </div>
+</section>
+
+<!-- ---------- Cómo queda ---------- -->
+<section class="seccion">
+  <div class="contenedor">
+    <div class="encabezado">
+      <span class="volanta">Obras entregadas</span>
+      <h2>Cómo queda una casa {servicio.nombre.toLowerCase()}</h2>
+    </div>
+    <div class="grilla grilla--auto">
+      <ImagenPlaceholder etiqueta="Foto de obra 1" relacion="4 / 3" />
+      <ImagenPlaceholder etiqueta="Foto de obra 2" relacion="4 / 3" />
+      <ImagenPlaceholder etiqueta="Foto de obra 3" relacion="4 / 3" />
+    </div>
+    <p class="seccion__pie">
+      <a class="boton boton--secundario" href="/obras/">Ver todas las obras</a>
+    </p>
+  </div>
+</section>
+
+<!-- ---------- Comparación con el otro servicio ---------- -->
+{
+  otro && (
+    <section class="seccion seccion--contraste">
+      <div class="contenedor comparar">
+        <div>
+          <span class="volanta">La otra opción</span>
+          <h2>{otro.nombre}</h2>
+          <p class="encabezado__bajada">{otro.bajada}</p>
+          <p class="comparar__plazo">Entrega en {otro.plazo}.</p>
+        </div>
+        <p class="comparar__accion">
+          <a class="boton boton--secundario boton--inverso" href={`/${otro.slug}/`}>
+            Ver {otro.nombre.toLowerCase()}
+          </a>
+        </p>
+      </div>
+    </section>
+  )
+}
+
+<SeccionCotizar
+  servicio={servicio.slug}
+  titulo={`Cotizá tu casa ${servicio.nombre.toLowerCase()}`}
+  bajada={`Contanos los metros y la localidad, y te mandamos el precio por WhatsApp. Trabajamos en todo el país, con flete bonificado hasta ${sitio.fleteBonificadoKm} km.`}
+/>
+
+<style>
+  .cabecera {
+    padding-bottom: 0;
+  }
+
+  .cabecera h1,
+  .cabecera .encabezado__bajada {
+    max-width: 52ch;
+  }
+
+  .cabecera__para {
+    max-width: 52ch;
+    margin-top: var(--espacio-4);
+    font-size: var(--texto-sm);
+    color: var(--color-texto-suave);
+  }
+
+  .cabecera__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio-3);
+    margin-top: var(--espacio-6);
+  }
+
+  .incluye {
+    display: grid;
+    gap: var(--espacio-7);
+  }
+
+  .incluye h2 {
+    margin-bottom: var(--espacio-5);
+    font-size: var(--texto-xl);
+  }
+
+  .incluye__nota {
+    margin-top: var(--espacio-5);
+    font-size: var(--texto-sm);
+  }
+
+  .seccion__pie {
+    margin-top: var(--espacio-6);
+  }
+
+  .comparar {
+    display: grid;
+    gap: var(--espacio-5);
+  }
+
+  .comparar__plazo {
+    margin-top: var(--espacio-3);
+    font-size: var(--texto-sm);
+    color: var(--color-inverso-suave);
+  }
+
+  @media (min-width: 64em) {
+    .incluye {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--espacio-8);
+    }
+
+    .comparar {
+      grid-template-columns: 1.6fr auto;
+      align-items: center;
+      gap: var(--espacio-7);
+    }
+  }
+</style>

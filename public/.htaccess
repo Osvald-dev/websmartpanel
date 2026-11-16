@@ -1,0 +1,12 @@
+# Configuración provisoria para Hostinger (Apache).
+# Se completa en la Fase 6 con las redirecciones desde la web vieja.
+
+# Forzar HTTPS
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [L,R=301]
+
+# Redirecciones desde la web vieja: [COMPLETAR en Fase 6]
+# Redirect 301 /pagina-vieja/ /pagina-nueva/
+
+ErrorDocument 404 /404.html

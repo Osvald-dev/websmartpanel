@@ -1,0 +1,96 @@
+---
+/**
+ * Preguntas frecuentes en acordeón nativo (details/summary): funciona sin
+ * JavaScript y es accesible con teclado por defecto.
+ *
+ * Recibe solo las preguntas con respuesta terminada (ver
+ * preguntasPublicadas en src/lib/contenido.ts), así nunca se publica
+ * un "[COMPLETAR]".
+ */
+import type { Pregunta } from '../lib/contenido';
+
+interface Props {
+  preguntas: Pregunta[];
+  /** Agrupa todas en el mismo acordeón: al abrir una se cierra la otra. */
+  exclusivo?: boolean;
+}
+
+const { preguntas, exclusivo = true } = Astro.props;
+---
+
+{
+  preguntas.length > 0 && (
+    <div class="faq">
+      {preguntas.map((item) => (
+        <details class="faq__item" name={exclusivo ? 'faq' : undefined}>
+          <summary class="faq__pregunta">
+            <span>{item.pregunta}</span>
+            <svg class="faq__signo" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </summary>
+          <div class="faq__respuesta">
+            <p>{item.respuesta}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  )
+}
+
+<style>
+  .faq {
+    display: flex;
+    flex-direction: column;
+    max-width: 52rem;
+  }
+
+  .faq__item {
+    border-bottom: var(--borde-fino) solid var(--color-borde);
+  }
+
+  .faq__pregunta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espacio-4);
+    min-height: var(--tamano-tactil);
+    padding-block: var(--espacio-4);
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-md);
+    font-weight: var(--peso-medio);
+    color: var(--color-titulo);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  /* Oculta el triangulito nativo (Safari incluido) */
+  .faq__pregunta::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__signo {
+    width: var(--tamano-icono);
+    height: var(--tamano-icono);
+    flex-shrink: 0;
+    color: var(--color-acento-texto);
+    transition: transform var(--transicion-media);
+  }
+
+  .faq__item[open] .faq__signo {
+    transform: rotate(180deg);
+  }
+
+  .faq__respuesta {
+    padding-bottom: var(--espacio-5);
+    max-width: var(--ancho-lectura);
+    color: var(--color-texto-suave);
+  }
+</style>

@@ -1,0 +1,162 @@
+---
+/**
+ * Contacto: todas las vías de contacto más el formulario completo.
+ * Los datos que todavía dicen "[COMPLETAR]" en sitio.json no se muestran.
+ */
+import Base from '../layouts/Base.astro';
+import Migas from '../components/Migas.astro';
+import SeccionCotizar from '../components/SeccionCotizar.astro';
+import { sitio, dato, enlaceWhatsApp } from '../lib/sitio';
+
+const email = dato(sitio.email);
+const direccion = dato(sitio.direccion);
+const maps = dato(sitio.googleMaps);
+---
+
+<Base
+  titulo="Contacto"
+  descripcion="Escribinos por WhatsApp al 3517 03-8778 o dejanos tus datos y te mandamos la cotización. Atendemos de lunes a viernes de 9 a 18 y sábados de 9 a 13."
+>
+  <header class="seccion cabecera">
+    <div class="contenedor">
+      <Migas pasos={[{ texto: 'Inicio', href: '/' }, { texto: 'Contacto' }]} />
+      <span class="volanta">Contacto</span>
+      <h1>Hablemos de tu casa</h1>
+      <p class="encabezado__bajada">
+        Lo más rápido es WhatsApp: ahí te pedimos cuatro datos y te pasamos un número. Si preferís,
+        dejanos tus datos en el formulario y te escribimos nosotros.
+      </p>
+    </div>
+  </header>
+
+  <section class="seccion">
+    <div class="contenedor vias">
+      <a class="via via--destacada" href={enlaceWhatsApp()} rel="noopener">
+        <span class="etiqueta etiqueta--acento">Lo más rápido</span>
+        <h2>WhatsApp {sitio.whatsapp.visible}</h2>
+        <p>Te respondemos en el horario de atención.</p>
+      </a>
+
+      {
+        email && (
+          <a class="via" href={`mailto:${email}`}>
+            <h2>Email</h2>
+            <p>{email}</p>
+          </a>
+        )
+      }
+
+      <a class="via" href={sitio.instagram.url} rel="noopener me">
+        <h2>Instagram</h2>
+        <p>@{sitio.instagram.usuario}</p>
+      </a>
+
+      {
+        sitio.facebook?.url && (
+          <a class="via" href={sitio.facebook.url} rel="noopener me">
+            <h2>Facebook</h2>
+            <p>Smart Panel Constructora</p>
+          </a>
+        )
+      }
+
+      <div class="via via--info">
+        <h2>Horario de atención</h2>
+        <p>{sitio.horario}</p>
+      </div>
+
+      <div class="via via--info">
+        <h2>Dónde trabajamos</h2>
+        <p>
+          En todo el país, con más actividad en Córdoba y Gran Buenos Aires. Flete bonificado hasta
+          {' '}{sitio.fleteBonificadoKm} km.
+        </p>
+      </div>
+
+      {
+        direccion && (
+          <div class="via via--info">
+            <h2>Oficina</h2>
+            <p>{direccion}</p>
+            {maps && (
+              <p>
+                <a href={maps} rel="noopener">Ver en Google Maps</a>
+              </p>
+            )}
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <SeccionCotizar
+    titulo="Dejanos tus datos y te escribimos"
+    bajada="Completá lo que puedas. Con la localidad y los metros ya podemos darte un número."
+  />
+</Base>
+
+<style>
+  .cabecera {
+    padding-bottom: 0;
+  }
+
+  .cabecera .encabezado__bajada {
+    max-width: 56ch;
+  }
+
+  .vias {
+    display: grid;
+    gap: var(--espacio-4);
+  }
+
+  .via {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-2);
+    align-items: flex-start;
+    padding: var(--espacio-5);
+    background-color: var(--color-superficie);
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio-md);
+    text-decoration: none;
+    color: var(--color-texto);
+    transition:
+      border-color var(--transicion-rapida),
+      transform var(--transicion-media);
+  }
+
+  a.via:hover {
+    border-color: var(--color-acento-texto);
+    transform: translateY(-2px);
+  }
+
+  .via h2 {
+    font-size: var(--texto-md);
+    font-weight: var(--peso-fuerte);
+  }
+
+  .via p {
+    font-size: var(--texto-sm);
+    color: var(--color-texto-suave);
+  }
+
+  .via--destacada {
+    background-color: var(--color-contraste);
+    border-color: var(--color-contraste);
+    color: var(--color-inverso);
+  }
+
+  .via--destacada h2 {
+    color: var(--color-inverso);
+  }
+
+  .via--destacada p {
+    color: var(--color-inverso-suave);
+  }
+
+  @media (min-width: 40em) {
+    .vias {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    }
+  }
+</style>

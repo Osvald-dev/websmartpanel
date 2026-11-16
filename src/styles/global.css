@@ -1,0 +1,473 @@
+/* Estilos globales: reset, base tipográfica y utilidades compartidas. */
+
+/* ---------- Reset mínimo ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  /* Red de seguridad: nada puede ensanchar la página más que la pantalla */
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Que los saltos a anclas no queden tapados por el header fijo */
+  scroll-padding-top: calc(var(--alto-header) + var(--espacio-4));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-base);
+  font-weight: var(--peso-normal);
+  line-height: var(--interlineado-texto);
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  flex: 1;
+}
+
+img,
+picture,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/*
+ * El atributo hidden tiene que ganarle a cualquier display de componente
+ * (.tarjeta es flex, .boton es inline-flex): sin esto, ocultar un elemento
+ * desde JavaScript con element.hidden = true no tendría efecto.
+ */
+[hidden] {
+  display: none !important;
+}
+
+img,
+video {
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+p,
+li {
+  text-wrap: pretty;
+  /* Un email o una URL larga se parte en vez de desbordar en 320px */
+  overflow-wrap: break-word;
+}
+
+/* ---------- Títulos ---------- */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--fuente-titulos);
+  font-weight: var(--peso-fuerte);
+  color: var(--color-titulo);
+  line-height: var(--interlineado-titulos);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--texto-3xl);
+  font-weight: 800;
+  line-height: var(--interlineado-ajustado);
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  font-size: var(--texto-2xl);
+}
+
+h3 {
+  font-size: var(--texto-lg);
+  font-weight: var(--peso-medio);
+}
+
+/* ---------- Enlaces y foco ---------- */
+a {
+  color: var(--color-enlace);
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: var(--borde-grueso) solid var(--color-foco);
+  outline-offset: var(--borde-grueso);
+  border-radius: var(--radio-sm);
+}
+
+/* ---------- Utilidades ---------- */
+.contenedor {
+  width: 100%;
+  max-width: calc(var(--ancho-contenedor) + 2 * var(--margen-lateral));
+  margin-inline: auto;
+  padding-inline: var(--margen-lateral);
+}
+
+.seccion {
+  padding-block: var(--espacio-seccion);
+}
+
+/* Sección de contraste en el color secundario */
+.seccion--contraste {
+  background-color: var(--color-contraste);
+  background-image: linear-gradient(160deg, var(--marca-700) 0%, var(--marca-800) 100%);
+  color: var(--color-inverso);
+}
+
+.seccion--contraste :is(h1, h2, h3, h4) {
+  color: var(--color-inverso);
+}
+
+.seccion--alt {
+  background-color: var(--color-superficie-alt);
+}
+
+.texto-suave {
+  color: var(--color-texto-suave);
+}
+
+.seccion--contraste .texto-suave {
+  color: var(--color-inverso-suave);
+}
+
+/* Oculto a la vista pero legible por lectores de pantalla */
+.solo-lector {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Enlace "Saltar al contenido" (visible solo con teclado) */
+.saltar {
+  position: absolute;
+  top: var(--espacio-2);
+  left: var(--espacio-2);
+  z-index: calc(var(--capa-menu) + 1);
+  padding: var(--espacio-2) var(--espacio-4);
+  background: var(--color-superficie);
+  color: var(--color-titulo);
+  border-radius: var(--radio-sm);
+  box-shadow: var(--sombra-md);
+  transform: translateY(-200%);
+}
+
+.saltar:focus {
+  transform: none;
+}
+
+/* ---------- Botones ---------- */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  min-height: var(--tamano-tactil);
+  padding: var(--espacio-3) var(--espacio-5);
+  border: var(--borde-grueso) solid transparent;
+  border-radius: var(--radio-pildora);
+  font-family: var(--fuente-titulos);
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-medio);
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--transicion-rapida),
+    border-color var(--transicion-rapida),
+    color var(--transicion-rapida),
+    transform var(--transicion-rapida);
+}
+
+.boton:active {
+  transform: translateY(1px);
+}
+
+/* Acción principal: acento cálido */
+.boton--primario {
+  background-color: var(--color-acento);
+  color: var(--color-sobre-acento);
+}
+
+.boton--primario:hover {
+  background-color: var(--color-acento-hover);
+}
+
+/* Acción secundaria: borde, toma el color del texto que la rodea */
+.boton--secundario {
+  background-color: transparent;
+  border-color: currentColor;
+  color: var(--color-titulo);
+}
+
+.boton--secundario {
+  border-color: var(--color-borde-fuerte);
+}
+
+.boton--secundario:hover {
+  border-color: var(--color-titulo);
+  background-color: rgb(255 255 255 / 0.08);
+}
+
+.seccion--contraste .boton--secundario,
+.boton--secundario.boton--inverso {
+  color: var(--color-inverso);
+}
+
+.seccion--contraste .boton--secundario:hover,
+.boton--secundario.boton--inverso:hover {
+  background-color: rgb(255 255 255 / 0.1);
+}
+
+.boton--whatsapp {
+  background-color: var(--color-whatsapp);
+  color: #ffffff;
+}
+
+.boton--whatsapp:hover {
+  background-color: var(--color-whatsapp-hover);
+}
+
+.boton--ancho {
+  width: 100%;
+}
+
+/* ---------- Bloques compartidos ---------- */
+
+/* Volanta: la línea corta en mayúsculas arriba del título de sección */
+.volanta {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  font-family: var(--fuente-titulos);
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-medio);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-acento-texto);
+  margin-bottom: var(--espacio-2);
+}
+
+/* Rayita antes de la volanta: detalle gráfico de la marca */
+.volanta::before {
+  content: '';
+  flex-shrink: 0;
+  width: var(--espacio-5);
+  height: var(--borde-grueso);
+  background-color: currentColor;
+  border-radius: var(--radio-pildora);
+}
+
+.encabezado--centrado .volanta {
+  justify-content: center;
+}
+
+/* Encabezado de sección: volanta + título + bajada */
+.encabezado {
+  max-width: 58ch;
+  margin-bottom: var(--espacio-6);
+}
+
+.encabezado--centrado {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.encabezado__bajada {
+  margin-top: var(--espacio-3);
+  font-size: var(--texto-md);
+  color: var(--color-texto-suave);
+}
+
+.seccion--contraste .encabezado__bajada {
+  color: var(--color-inverso-suave);
+}
+
+/* Texto largo con ancho de lectura cómodo */
+.prosa {
+  max-width: var(--ancho-lectura);
+}
+
+.prosa > * + * {
+  margin-top: var(--espacio-4);
+}
+
+.prosa h2,
+.prosa h3 {
+  margin-top: var(--espacio-6);
+}
+
+/* Grillas que se acomodan solas, sin medidas a mano */
+.grilla {
+  display: grid;
+  gap: var(--espacio-5);
+}
+
+.grilla--auto {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.grilla--2 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+}
+
+/* Superficie de tarjeta */
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio-md);
+  overflow: hidden;
+}
+
+.tarjeta__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  padding: var(--espacio-4);
+}
+
+/* Etiqueta chica (línea del modelo, estado, tipo de obra) */
+.etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  padding: var(--espacio-1) var(--espacio-3);
+  border-radius: var(--radio-pildora);
+  background-color: rgb(255 255 255 / 0.08);
+  color: var(--color-acento-texto);
+  font-family: var(--fuente-titulos);
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-medio);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.etiqueta--acento {
+  background-color: var(--color-acento);
+  color: var(--color-sobre-acento);
+}
+
+/* Lista con tilde, para "qué incluye" */
+.lista-marcada {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  padding: 0;
+  list-style: none;
+}
+
+.lista-marcada > li {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr;
+  gap: var(--espacio-3);
+  align-items: start;
+}
+
+.lista-marcada > li::before {
+  content: '';
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.2em;
+  border-radius: var(--radio-pildora);
+  background-color: var(--color-acento-texto);
+  /* Tilde dibujado con máscara: no necesita icono ni fuente */
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 13l4 4 10-10' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    center / 0.85rem no-repeat;
+}
+
+.lista-marcada--cruz > li::before {
+  background-color: var(--color-texto-suave);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 7l10 10M17 7L7 17' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/*
+ * Contenido pendiente de cargar ([COMPLETAR] en los archivos de datos).
+ * Se ve distinto a propósito, para detectarlo de un vistazo antes de publicar.
+ */
+.pendiente {
+  color: var(--color-texto-suave);
+  font-style: italic;
+}
+
+.pendiente::after {
+  content: ' · pendiente';
+  font-style: normal;
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-medio);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-acento-texto);
+}
+
+/* Dato fuerte (número grande con su etiqueta) */
+.dato {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+.dato__numero {
+  font-family: var(--fuente-titulos);
+  font-size: var(--texto-xl);
+  font-weight: var(--peso-fuerte);
+  line-height: 1;
+  color: var(--color-titulo);
+}
+
+.seccion--contraste .dato__numero {
+  color: var(--color-inverso);
+}
+
+.dato__etiqueta {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-suave);
+}
+
+.seccion--contraste .dato__etiqueta {
+  color: var(--color-inverso-suave);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

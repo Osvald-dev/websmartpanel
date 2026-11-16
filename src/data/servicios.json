@@ -1,0 +1,119 @@
+{
+  "_instrucciones": "Fichas técnicas de los dos sistemas. Cada item con [COMPLETAR] se muestra en gris y con la marca de pendiente, así se ve qué falta cargar. Para publicar, reemplazar el texto completo del item. Un item vacío (\"\") se oculta.",
+  "servicios": [
+    {
+      "slug": "obra-gris",
+      "nombre": "Obra gris con terminación exterior",
+      "titulo": "Obra gris con terminación exterior incluida: mirá qué trae",
+      "bajada": "Te entregamos la casa cerrada, aislada y terminada por fuera. Las terminaciones interiores las hacés vos, a tu tiempo y a tu gusto.",
+      "plazo": "30 días",
+      "paraQuien": "Para quien quiere entrar al metro cuadrado más conveniente y terminar los interiores por su cuenta o de a poco.",
+      "incluye": [
+        "Platea de hormigón incluida",
+        "Estructura de Wood Frame completa",
+        "Aislación exterior con sistema EIFS",
+        "Flete bonificado hasta 700 km",
+        "[COMPLETAR] aberturas que incluye (tipo, material, vidrios)",
+        "[COMPLETAR] cubierta y aislación de techo",
+        "[COMPLETAR] instalación eléctrica (hasta qué punto se entrega)",
+        "[COMPLETAR] instalación sanitaria y de agua (hasta qué punto se entrega)"
+      ],
+      "noIncluye": [
+        "[COMPLETAR] terminaciones interiores que quedan a cargo del cliente",
+        "[COMPLETAR] pisos, revestimientos y pintura interior",
+        "[COMPLETAR] artefactos de baño y cocina",
+        "[COMPLETAR] trámites, planos municipales y conexión de servicios"
+      ],
+      "especificaciones": [
+        {
+          "grupo": "Fundación",
+          "items": ["Platea de hormigón armado incluida", "[COMPLETAR] espesor y armadura de la platea"]
+        },
+        {
+          "grupo": "Estructura",
+          "items": [
+            "Sistema Wood Frame",
+            "[COMPLETAR] escuadría y separación de los montantes",
+            "[COMPLETAR] placas de cerramiento interior y exterior"
+          ]
+        },
+        {
+          "grupo": "Aislación",
+          "items": [
+            "Sistema EIFS en la envolvente exterior",
+            "[COMPLETAR] espesor del EPS del EIFS",
+            "[COMPLETAR] aislación de techo y barrera de vapor"
+          ]
+        },
+        {
+          "grupo": "Terminación exterior",
+          "items": [
+            "[COMPLETAR] revestimiento y color de terminación",
+            "[COMPLETAR] zócalo perimetral y cenefas"
+          ]
+        },
+        {
+          "grupo": "Aberturas",
+          "items": ["[COMPLETAR] puertas exteriores", "[COMPLETAR] ventanas y tipo de vidrio"]
+        },
+        {
+          "grupo": "Instalaciones",
+          "items": [
+            "[COMPLETAR] eléctrica: bocas, tablero y cableado",
+            "[COMPLETAR] sanitaria: cañerías de agua y desagües"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "llave-en-mano",
+      "nombre": "Llave en mano",
+      "titulo": "Llave en mano: recibís la casa terminada y lista para habitar",
+      "bajada": "Nos ocupamos de todo, de la platea a la última mano de pintura. Entrás con los muebles y nada más.",
+      "plazo": "90 a 120 días",
+      "paraQuien": "Para quien prefiere no manejar la obra y recibir la casa funcionando.",
+      "incluye": [
+        "Todo lo de obra gris con terminación exterior",
+        "[COMPLETAR] pisos y revestimientos",
+        "[COMPLETAR] pintura interior completa",
+        "[COMPLETAR] muebles de cocina y bajo mesada",
+        "[COMPLETAR] artefactos y griferías de baño y cocina",
+        "[COMPLETAR] instalación eléctrica terminada con artefactos",
+        "[COMPLETAR] calefacción y agua caliente"
+      ],
+      "noIncluye": [
+        "[COMPLETAR] trámites, planos municipales y conexión de servicios",
+        "[COMPLETAR] movimiento de suelo o trabajos especiales del terreno"
+      ],
+      "especificaciones": [
+        {
+          "grupo": "Base",
+          "items": ["Incluye la ficha completa de obra gris con terminación exterior"]
+        },
+        {
+          "grupo": "Pisos y revestimientos",
+          "items": ["[COMPLETAR] piso de áreas secas", "[COMPLETAR] piso y revestimiento de áreas húmedas"]
+        },
+        {
+          "grupo": "Pintura y cielorrasos",
+          "items": ["[COMPLETAR] tipo de pintura interior", "[COMPLETAR] cielorrasos"]
+        },
+        {
+          "grupo": "Cocina y baños",
+          "items": [
+            "[COMPLETAR] mesada y muebles",
+            "[COMPLETAR] artefactos sanitarios",
+            "[COMPLETAR] griferías"
+          ]
+        },
+        {
+          "grupo": "Instalaciones terminadas",
+          "items": [
+            "[COMPLETAR] eléctrica con llaves, tomas y artefactos",
+            "[COMPLETAR] agua caliente y calefacción"
+          ]
+        }
+      ]
+    }
+  ]
+}

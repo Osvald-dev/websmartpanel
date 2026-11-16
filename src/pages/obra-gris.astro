@@ -1,0 +1,19 @@
+---
+/**
+ * Página del servicio de obra gris con terminación exterior.
+ * Todo el contenido sale de src/data/servicios.json.
+ */
+import Base from '../layouts/Base.astro';
+import PaginaServicio from '../components/PaginaServicio.astro';
+import { buscarServicio } from '../lib/contenido';
+
+const servicio = buscarServicio('obra-gris')!;
+const otro = buscarServicio('llave-en-mano');
+---
+
+<Base
+  titulo="Obra gris con terminación exterior en 30 días"
+  descripcion="Te entregamos la casa cerrada, aislada con sistema EIFS y terminada por fuera en 30 días. Platea de hormigón incluida. Mirá la ficha técnica completa de materiales."
+>
+  <PaginaServicio servicio={servicio} otro={otro} />
+</Base>

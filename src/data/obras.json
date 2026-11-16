@@ -1,0 +1,18 @@
+{
+  "_instrucciones": "Una ficha por obra entregada. Copiar el bloque completo para agregar otra. Mientras el array esté vacío, /obras/ muestra el estado 'galería en preparación' en vez de una página vacía. testimonio: cargar solo con permiso del cliente; si no hay permiso, dejarlo en null. imagenes: nombres de archivo dentro de src/assets/obras/<slug>/, la primera es la portada.",
+  "_fichaEjemplo": {
+    "slug": "casa-en-villa-allende",
+    "nombre": "Casa en Villa Allende",
+    "localidad": "Villa Allende",
+    "provincia": "Córdoba",
+    "anio": 2026,
+    "m2": 72,
+    "modelo": "a medida",
+    "tipo": "obra gris",
+    "plazoReal": "30 días",
+    "descripcion": "",
+    "testimonio": { "texto": "", "autor": "", "autorizado": false },
+    "imagenes": []
+  },
+  "obras": []
+}

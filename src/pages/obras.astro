@@ -1,0 +1,142 @@
+---
+/**
+ * Galería de obras entregadas. Se alimenta de src/data/obras.json.
+ * Mientras no haya obras cargadas, muestra el estado "en preparación"
+ * en lugar de una página vacía.
+ */
+import Base from '../layouts/Base.astro';
+import Migas from '../components/Migas.astro';
+import ImagenPlaceholder from '../components/ImagenPlaceholder.astro';
+import SeccionCotizar from '../components/SeccionCotizar.astro';
+import { sitio } from '../lib/sitio';
+import { obras, testimonios } from '../lib/contenido';
+---
+
+<Base
+  titulo="Obras entregadas"
+  descripcion="Casas en Wood Frame que ya construimos y entregamos, de Córdoba al resto del país. Más de 500 casas terminadas con obra gris con terminación exterior y llave en mano."
+>
+  <header class="seccion cabecera">
+    <div class="contenedor">
+      <Migas pasos={[{ texto: 'Inicio', href: '/' }, { texto: 'Obras' }]} />
+      <span class="volanta">Obras entregadas</span>
+      <h1>{sitio.obrasEntregadas} casas construidas y entregadas</h1>
+      <p class="encabezado__bajada">
+        Casas reales, en terrenos reales. Esta galería se arma con fotos de obras terminadas, con
+        la localidad, los metros y el tipo de trabajo de cada una.
+      </p>
+    </div>
+  </header>
+
+  <section class="seccion">
+    <div class="contenedor">
+      {
+        obras.length === 0 ? (
+          <>
+            <p class="aviso">
+              Galería en preparación: estamos eligiendo las fotos de las obras que mejor muestran el
+              trabajo terminado. La estructura de la página ya está lista para cargarlas.
+            </p>
+
+            <div class="grilla grilla--auto obras__grilla">
+              <ImagenPlaceholder etiqueta="Obra 1" relacion="4 / 3" />
+              <ImagenPlaceholder etiqueta="Obra 2" relacion="4 / 3" />
+              <ImagenPlaceholder etiqueta="Obra 3" relacion="4 / 3" />
+              <ImagenPlaceholder etiqueta="Obra 4" relacion="4 / 3" />
+              <ImagenPlaceholder etiqueta="Obra 5" relacion="4 / 3" />
+              <ImagenPlaceholder etiqueta="Obra 6" relacion="4 / 3" />
+            </div>
+          </>
+        ) : (
+          <div class="grilla grilla--auto">
+            {obras.map((obra) => (
+              <article class="obra tarjeta">
+                <ImagenPlaceholder etiqueta={obra.nombre} relacion="4 / 3" />
+                <div class="tarjeta__cuerpo">
+                  {obra.tipo && <span class="etiqueta">{obra.tipo}</span>}
+                  <h2 class="obra__nombre">{obra.nombre}</h2>
+                  <p class="texto-suave obra__lugar">
+                    {[obra.localidad, obra.provincia].filter(Boolean).join(', ')}
+                    {obra.anio && ` · ${obra.anio}`}
+                  </p>
+                  {obra.m2 && <p class="obra__dato">{obra.m2} m² · {obra.modelo}</p>}
+                  {obra.descripcion && <p class="texto-suave">{obra.descripcion}</p>}
+                </div>
+              </article>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    testimonios.length > 0 && (
+      <section class="seccion seccion--alt">
+        <div class="contenedor">
+          <div class="encabezado">
+            <span class="volanta">Lo que dicen</span>
+            <h2>Clientes que ya están viviendo en su casa</h2>
+          </div>
+          <div class="grilla grilla--auto">
+            {testimonios.map((testimonio) => (
+              <blockquote class="testimonio tarjeta">
+                <div class="tarjeta__cuerpo">
+                  <p>{testimonio.texto}</p>
+                  <footer class="texto-suave testimonio__autor">
+                    {testimonio.autor} · {testimonio.localidad}
+                  </footer>
+                </div>
+              </blockquote>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <SeccionCotizar
+    titulo="¿Querés que la próxima sea la tuya?"
+    bajada="Contanos dónde querés construir y cuántos metros, y te mandamos la cotización por WhatsApp."
+  />
+</Base>
+
+<style>
+  .cabecera {
+    padding-bottom: 0;
+  }
+
+  .aviso {
+    max-width: var(--ancho-lectura);
+    margin-bottom: var(--espacio-6);
+    padding: var(--espacio-4);
+    background-color: var(--color-superficie-alt);
+    border-left: var(--borde-grueso) solid var(--color-acento-texto);
+    border-radius: var(--radio-sm);
+    font-size: var(--texto-sm);
+    color: var(--color-texto-suave);
+  }
+
+  .obras__grilla :global(.hueco) {
+    border-radius: var(--radio-md);
+  }
+
+  .obra__nombre {
+    font-size: var(--texto-lg);
+    font-weight: var(--peso-fuerte);
+  }
+
+  .obra__lugar,
+  .obra__dato {
+    font-size: var(--texto-sm);
+  }
+
+  .testimonio {
+    margin: 0;
+  }
+
+  .testimonio__autor {
+    margin-top: var(--espacio-3);
+    font-size: var(--texto-sm);
+  }
+</style>

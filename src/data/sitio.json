@@ -1,0 +1,34 @@
+{
+  "nombre": "Smart Panel Constructora",
+  "dominio": "https://smartpanelconstructora.com",
+  "descripcion": "Casas en construcción en seco (Wood Frame) en todo el país, con foco en Gran Buenos Aires y Córdoba. Obra gris con terminación exterior, llave en mano y obras a medida.",
+  "whatsapp": {
+    "numero": "5493517038778",
+    "visible": "3517 03-8778",
+    "mensaje": "¡Hola Smart Panel! Quiero consultar por una casa."
+  },
+  "email": "informacion@smartpanelconstructora.com",
+  "instagram": {
+    "usuario": "smartpanel.oficial",
+    "url": "https://www.instagram.com/smartpanel.oficial/"
+  },
+  "facebook": {
+    "url": "https://www.facebook.com/profile.php?id=61554326391582"
+  },
+  "horario": "Lunes a viernes de 9 a 18 h · Sábados de 9 a 13 h",
+  "horarioSchema": ["Mo-Fr 09:00-18:00", "Sa 09:00-13:00"],
+  "razonSocial": "[COMPLETAR]",
+  "cuit": "[COMPLETAR]",
+  "direccion": "[COMPLETAR]",
+  "googleMaps": "[COMPLETAR]",
+  "zonas": ["Gran Buenos Aires", "Córdoba", "Todo el país"],
+  "obrasEntregadas": "+500",
+  "plazoObraGris": "30 días",
+  "plazoLlaveEnMano": "90 a 120 días",
+  "fleteBonificadoKm": 700,
+  "heroVideo": "",
+  "heroPoster": "",
+  "metaPixelId": "[COMPLETAR]",
+  "googleAnalyticsId": "[COMPLETAR]",
+  "leadsEndpoint": "[COMPLETAR]"
+}

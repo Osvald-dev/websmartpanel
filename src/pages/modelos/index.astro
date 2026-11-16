@@ -1,0 +1,305 @@
+---
+/**
+ * Catálogo completo con filtros por línea, habitaciones y metros.
+ *
+ * El filtrado es en el navegador, sobre las tarjetas ya generadas: no hay
+ * recarga ni pedidos al servidor. Los datos de cada tarjeta viajan en
+ * data-linea, data-habitaciones y data-m2 (ver TarjetaModelo.astro).
+ *
+ * Sin JavaScript se ven todos los modelos y los filtros no aparecen.
+ */
+import Base from '../../layouts/Base.astro';
+import TarjetaModelo from '../../components/TarjetaModelo.astro';
+import SeccionCotizar from '../../components/SeccionCotizar.astro';
+import { lineas } from '../../lib/sitio';
+import { modelos, rangosM2 } from '../../lib/modelos';
+
+const rangos = rangosM2();
+
+// Opciones de habitaciones realmente presentes en los datos cargados.
+const habitaciones = [
+  ...new Set(
+    modelos
+      .map((modelo) => modelo.habitaciones)
+      .filter((valor): valor is number => valor !== null)
+  ),
+].sort((a, b) => a - b);
+---
+
+<Base
+  titulo="Modelos de casas en Wood Frame"
+  descripcion={`Los ${modelos.length} modelos de Smart Panel Constructora: 2 y 3 habitaciones, duplex y línea Smart AI. Cada uno con render, plano y metros, y todos adaptables a tu terreno.`}
+>
+  <header class="seccion cabecera">
+    <div class="contenedor">
+      <span class="volanta">Catálogo</span>
+      <h1>{modelos.length} modelos para elegir</h1>
+      <p class="encabezado__bajada">
+        Mirá los modelos, entrá al que te guste y pedí la cotización. Todos se pueden adaptar: si
+        querés un ambiente más o mover una pared, lo vemos.
+      </p>
+    </div>
+  </header>
+
+  <section class="seccion catalogo">
+    <div class="contenedor">
+      <!-- ---------- Filtros ---------- -->
+      <form class="filtros" data-filtros hidden>
+        <fieldset class="filtro">
+          <legend class="filtro__titulo">Línea</legend>
+          <div class="filtro__opciones">
+            <label class="chip">
+              <input type="radio" name="linea" value="" checked />
+              <span>Todas</span>
+            </label>
+            {
+              lineas.map((linea) => (
+                <label class="chip">
+                  <input type="radio" name="linea" value={linea.slug} />
+                  <span>{linea.texto}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        {
+          habitaciones.length > 0 && (
+            <fieldset class="filtro">
+              <legend class="filtro__titulo">Habitaciones</legend>
+              <div class="filtro__opciones">
+                <label class="chip">
+                  <input type="radio" name="habitaciones" value="" checked />
+                  <span>Todas</span>
+                </label>
+                {habitaciones.map((cantidad) => (
+                  <label class="chip">
+                    <input type="radio" name="habitaciones" value={String(cantidad)} />
+                    <span>{cantidad}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          )
+        }
+
+        {
+          rangos.length > 0 && (
+            <fieldset class="filtro">
+              <legend class="filtro__titulo">Metros cubiertos</legend>
+              <div class="filtro__opciones">
+                <label class="chip">
+                  <input type="radio" name="m2" value="" checked />
+                  <span>Todos</span>
+                </label>
+                {rangos.map((rango) => (
+                  <label class="chip">
+                    <input type="radio" name="m2" value={`${rango.min}-${rango.max}`} />
+                    <span>{rango.etiqueta}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          )
+        }
+
+        <p class="filtros__pie">
+          <span data-conteo aria-live="polite">{modelos.length} modelos</span>
+          <button class="filtros__limpiar" type="reset" data-limpiar>Limpiar filtros</button>
+        </p>
+      </form>
+
+      <!-- ---------- Resultados ---------- -->
+      <div class="grilla grilla--auto" data-resultados>
+        {modelos.map((modelo) => <TarjetaModelo modelo={modelo} />)}
+      </div>
+
+      <p class="catalogo__vacio" data-vacio hidden>
+        No hay modelos con esa combinación. Probá quitando un filtro, o
+        <a href="/#cotizar">contanos qué buscás</a> y lo vemos a medida.
+      </p>
+    </div>
+  </section>
+
+  <SeccionCotizar
+    titulo="¿Ninguno es exactamente lo que buscás?"
+    bajada="Contanos qué necesitás y lo adaptamos. Cualquier modelo del catálogo se puede modificar, y también construimos sobre tu propio plano."
+  />
+</Base>
+
+<style>
+  .cabecera {
+    padding-bottom: 0;
+  }
+
+  .cabecera .encabezado__bajada {
+    max-width: 58ch;
+  }
+
+  /* ---------- Filtros ---------- */
+  .filtros {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-5);
+    margin-bottom: var(--espacio-6);
+    padding: var(--espacio-5);
+    background-color: var(--color-superficie);
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio-md);
+  }
+
+  .filtro {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .filtro__titulo {
+    padding: 0;
+    margin-bottom: var(--espacio-3);
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-xs);
+    font-weight: var(--peso-medio);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-texto-suave);
+  }
+
+  .filtro__opciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio-2);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tamano-tactil);
+    padding-inline: var(--espacio-4);
+    background-color: var(--color-superficie);
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio-pildora);
+    font-size: var(--texto-sm);
+    cursor: pointer;
+    transition:
+      background-color var(--transicion-rapida),
+      border-color var(--transicion-rapida),
+      color var(--transicion-rapida);
+  }
+
+  .chip:hover {
+    border-color: var(--color-texto-suave);
+  }
+
+  .chip input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .chip:has(input:checked) {
+    background-color: var(--color-contraste);
+    border-color: var(--color-contraste);
+    color: var(--color-inverso);
+    font-weight: var(--peso-medio);
+  }
+
+  .chip:has(input:focus-visible) {
+    outline: var(--borde-grueso) solid var(--color-foco);
+    outline-offset: var(--borde-grueso);
+  }
+
+  .filtros__pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espacio-3);
+    padding-top: var(--espacio-4);
+    border-top: var(--borde-fino) solid var(--color-borde);
+    font-size: var(--texto-sm);
+    color: var(--color-texto-suave);
+  }
+
+  .filtros__limpiar {
+    min-height: var(--tamano-tactil);
+    padding-inline: var(--espacio-3);
+    background: none;
+    border: 0;
+    color: var(--color-enlace);
+    font-size: var(--texto-sm);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+
+  .catalogo__vacio {
+    max-width: var(--ancho-lectura);
+    margin-top: var(--espacio-6);
+  }
+
+  @media (min-width: 64em) {
+    .filtros {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+      align-items: start;
+      gap: var(--espacio-5) var(--espacio-6);
+    }
+
+    .filtros__pie {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
+
+<script>
+  const formulario = document.querySelector<HTMLFormElement>('[data-filtros]');
+  const resultados = document.querySelector<HTMLElement>('[data-resultados]');
+  const vacio = document.querySelector<HTMLElement>('[data-vacio]');
+  const conteo = document.querySelector<HTMLElement>('[data-conteo]');
+
+  if (formulario && resultados) {
+    // Los filtros solo sirven con JS: recién acá se muestran.
+    formulario.hidden = false;
+
+    const tarjetas = Array.from(resultados.querySelectorAll<HTMLElement>('[data-modelo]'));
+
+    function aplicar() {
+      const datos = new FormData(formulario!);
+      const linea = String(datos.get('linea') ?? '');
+      const habitaciones = String(datos.get('habitaciones') ?? '');
+      const m2 = String(datos.get('m2') ?? '');
+
+      let visibles = 0;
+
+      tarjetas.forEach((tarjeta) => {
+        let mostrar = true;
+
+        if (linea && tarjeta.dataset.linea !== linea) mostrar = false;
+
+        if (habitaciones && tarjeta.dataset.habitaciones !== habitaciones) mostrar = false;
+
+        if (m2) {
+          const [min, max] = m2.split('-').map(Number);
+          const valor = Number(tarjeta.dataset.m2);
+          // Un modelo sin metros cargados no entra en ningún rango
+          if (!tarjeta.dataset.m2 || valor < min || valor >= max) mostrar = false;
+        }
+
+        tarjeta.hidden = !mostrar;
+        if (mostrar) visibles++;
+      });
+
+      if (conteo) {
+        conteo.textContent = visibles === 1 ? '1 modelo' : `${visibles} modelos`;
+      }
+      if (vacio) vacio.hidden = visibles > 0;
+    }
+
+    formulario.addEventListener('change', aplicar);
+    // El reset del navegador ocurre después del evento: se espera un tick
+    formulario.addEventListener('reset', () => window.setTimeout(aplicar, 0));
+    aplicar();
+  }
+</script>

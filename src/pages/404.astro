@@ -1,0 +1,87 @@
+---
+/**
+ * Página de error 404. Hostinger la sirve con el ErrorDocument
+ * configurado en public/.htaccess.
+ */
+import Base from '../layouts/Base.astro';
+import { navegacion, enlaceWhatsApp } from '../lib/sitio';
+---
+
+<Base
+  titulo="Página no encontrada"
+  descripcion="La página que buscás no existe o cambió de dirección."
+  noIndexar
+>
+  <section class="seccion error">
+    <div class="contenedor">
+      <span class="volanta">Error 404</span>
+      <h1>Esta página no está acá</h1>
+      <p class="encabezado__bajada">
+        Puede que haya cambiado de dirección o que el enlace esté mal escrito. Probá por donde sí
+        hay algo para ver:
+      </p>
+
+      <ul class="error__enlaces" role="list">
+        <li><a class="boton boton--primario" href="/modelos/">Ver los modelos</a></li>
+        <li><a class="boton boton--secundario" href="/">Ir al inicio</a></li>
+        <li>
+          <a class="boton boton--whatsapp" href={enlaceWhatsApp()} rel="noopener">
+            Preguntar por WhatsApp
+          </a>
+        </li>
+      </ul>
+
+      <nav class="error__mapa" aria-label="Secciones del sitio">
+        <h2>Todas las secciones</h2>
+        <ul role="list">
+          {
+            navegacion.map((item) => (
+              <li>
+                <a href={item.href}>{item.texto}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .error {
+    max-width: 48rem;
+  }
+
+  .error__enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio-3);
+    margin-top: var(--espacio-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  .error__mapa {
+    margin-top: var(--espacio-7);
+    padding-top: var(--espacio-5);
+    border-top: var(--borde-fino) solid var(--color-borde);
+  }
+
+  .error__mapa h2 {
+    font-size: var(--texto-xs);
+    font-weight: var(--peso-medio);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-texto-suave);
+    margin-bottom: var(--espacio-3);
+  }
+
+  .error__mapa ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio-2) var(--espacio-5);
+    padding: 0;
+    list-style: none;
+    font-size: var(--texto-sm);
+  }
+</style>

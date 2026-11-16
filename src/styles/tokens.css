@@ -1,0 +1,135 @@
+/*
+ * Tokens de diseño de Smart Panel.
+ * Todas las medidas, colores y sombras salen de acá: los componentes
+ * no usan valores sueltos.
+ *
+ * Paleta de marca: #020C1C (principal), #0A3D4D (secundario) y blanco
+ * para las letras. El sitio es oscuro de punta a punta, como la marca.
+ * El celeste es el mismo tono del secundario llevado a claro: se usa solo
+ * en detalles (volantas, enlaces, foco), nunca como color de fondo.
+ *
+ * Contraste verificado (WCAG 2.1):
+ *   blanco / fondo .......... 19.5:1   texto-suave / fondo ...... 10.3:1
+ *   blanco / secundario ..... 11.6:1   texto-suave / secundario .. 6.1:1
+ *   celeste / fondo ......... 11.4:1   fondo / botón blanco ..... 19.5:1
+ */
+
+:root {
+  /* ---------- Paleta base (no usar directo en componentes) ---------- */
+  --marca-950: #020c1c; /* color principal */
+  --marca-900: #051626;
+  --marca-850: #082030;
+  --marca-800: #0a2a3a;
+  --marca-700: #0a3d4d; /* color secundario */
+  --marca-600: #0f5266;
+  --celeste-300: #7fd3e3;
+  --celeste-200: #bde9f1;
+  --blanco: #ffffff;
+  --verde-wa: #0f7a43;
+  --verde-wa-hover: #0b6236;
+
+  /* ---------- Colores semánticos ---------- */
+  --color-fondo: var(--marca-950);
+  --color-superficie: var(--marca-850);      /* tarjetas */
+  --color-superficie-alt: var(--marca-900);  /* secciones alternadas */
+  --color-campo: var(--marca-950);           /* inputs del formulario */
+  --color-borde: rgb(255 255 255 / 0.12);
+  --color-borde-fuerte: rgb(255 255 255 / 0.28);
+  --color-texto: var(--blanco);
+  --color-texto-suave: #a9bec6;
+  --color-titulo: var(--blanco);
+  --color-enlace: var(--celeste-300);
+  --color-acento-texto: var(--celeste-300);
+
+  /* Botón principal: blanco con letra oscura (lo que más resalta sobre la marca) */
+  --color-acento: var(--blanco);
+  --color-acento-hover: var(--celeste-200);
+  --color-sobre-acento: var(--marca-950);
+
+  /* Secciones de contraste (secundario) */
+  --color-contraste: var(--marca-700);
+  --color-oscuro: var(--marca-950);
+  --color-inverso: var(--blanco);
+  --color-inverso-suave: #b9ccd2;
+
+  --color-whatsapp: var(--verde-wa);
+  --color-whatsapp-hover: var(--verde-wa-hover);
+  --color-foco: var(--celeste-300);
+  --color-error: #ff9b8a;
+  --color-header: rgb(2 12 28 / 0.82);
+
+  /* ---------- Tipografía ---------- */
+  --fuente-titulos: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+  --fuente-texto: 'Inter', 'Segoe UI', system-ui, sans-serif;
+
+  --peso-normal: 400;
+  --peso-medio: 600;
+  --peso-fuerte: 700;
+
+  /* Escala fluida: crece suave entre celular (320px) y escritorio (1280px) */
+  --texto-xs: 0.8125rem;
+  --texto-sm: 0.9375rem;
+  --texto-base: 1rem;
+  --texto-md: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --texto-lg: clamp(1.25rem, 1.12rem + 0.6vw, 1.5rem);
+  --texto-xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --texto-2xl: clamp(1.75rem, 1.35rem + 2vw, 3rem);
+  --texto-3xl: clamp(2rem, 1.3rem + 3.6vw, 4.25rem);
+
+  --interlineado-ajustado: 1.08;
+  --interlineado-titulos: 1.2;
+  --interlineado-texto: 1.6;
+  --ancho-lectura: 65ch;
+
+  /* ---------- Espaciado (escala de 4px) ---------- */
+  --espacio-1: 0.25rem;  /*  4px */
+  --espacio-2: 0.5rem;   /*  8px */
+  --espacio-3: 0.75rem;  /* 12px */
+  --espacio-4: 1rem;     /* 16px */
+  --espacio-5: 1.5rem;   /* 24px */
+  --espacio-6: 2rem;     /* 32px */
+  --espacio-7: 3rem;     /* 48px */
+  --espacio-8: 4rem;     /* 64px */
+  --espacio-9: 6rem;     /* 96px */
+
+  /* Aire vertical entre secciones (fluido) */
+  --espacio-seccion: clamp(var(--espacio-8), 9vw, 7.5rem);
+
+  /* ---------- Layout ---------- */
+  --ancho-contenedor: 75rem;      /* 1200px */
+  --margen-lateral: clamp(var(--espacio-4), 4vw, var(--espacio-6));
+  --alto-header: 4.25rem;
+  --tamano-tactil: 2.75rem;       /* 44px: mínimo táctil recomendado */
+  --tamano-flotante: 3.5rem;      /* botón de WhatsApp */
+  --tamano-icono: 1.5rem;
+
+  /* ---------- Bordes, radios y sombras ---------- */
+  --borde-fino: 1px;
+  --borde-grueso: 2px;
+  --radio-sm: 0.5rem;
+  --radio-md: 1rem;
+  --radio-lg: 1.5rem;
+  --radio-pildora: 999px;
+
+  --sombra-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --sombra-md: 0 8px 24px rgb(0 0 0 / 0.35);
+  --sombra-lg: 0 24px 60px rgb(0 0 0 / 0.5);
+  /* Resplandor del color secundario, para hovers y la tarjeta del hero */
+  --brillo: 0 0 0 1px rgb(127 211 227 / 0.25), 0 16px 48px rgb(10 61 77 / 0.55);
+
+  /* ---------- Movimiento y capas ---------- */
+  --transicion-rapida: 150ms ease;
+  --transicion-media: 280ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  --capa-header: 50;
+  --capa-menu: 60;
+  --capa-flotante: 40;
+
+  /* El sitio es siempre oscuro: así los controles nativos (selects, scroll) acompañan */
+  color-scheme: dark;
+}
+
+/*
+ * Breakpoints (las media queries no aceptan variables, se escriben literal):
+ *   40em (640px)  celular grande / tablet chica
+ *   64em (1024px) escritorio: menú completo en el header
+ */

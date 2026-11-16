@@ -1,0 +1,275 @@
+---
+/**
+ * Carrusel horizontal. Funciona sin JavaScript (es un contenedor con scroll
+ * y puntos de anclaje); el JS solo agrega el avance automático, las flechas
+ * y los puntos.
+ *
+ * Se detiene al pasar el mouse, al tocarlo, al enfocar algo adentro y
+ * cuando el sistema pide menos movimiento (prefers-reduced-motion).
+ */
+interface Props {
+  /** Nombre del carrusel para lectores de pantalla. */
+  etiqueta: string;
+  /** Milisegundos entre avances. 0 desactiva el avance automático. */
+  intervalo?: number;
+  /** Cuántas tarjetas se ven por vez en escritorio. */
+  porVista?: 2 | 3 | 4;
+}
+
+const { etiqueta, intervalo = 5500, porVista = 3 } = Astro.props;
+---
+
+<div
+  class="carrusel"
+  data-carrusel
+  data-intervalo={intervalo}
+  style={`--por-vista: ${porVista}`}
+  role="group"
+  aria-roledescription="carrusel"
+  aria-label={etiqueta}
+>
+  <div class="carrusel__pista" data-pista tabindex="0">
+    <slot />
+  </div>
+
+  <div class="carrusel__controles">
+    <button class="carrusel__flecha" type="button" data-anterior>
+      <span class="solo-lector">Anterior</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"
+        ><path
+          d="M15 5l-7 7 7 7"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path></svg
+      >
+    </button>
+
+    <div class="carrusel__puntos" data-puntos role="tablist" aria-label={`Ir a una parte de ${etiqueta}`}></div>
+
+    <button class="carrusel__flecha" type="button" data-siguiente>
+      <span class="solo-lector">Siguiente</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"
+        ><path
+          d="M9 5l7 7-7 7"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path></svg
+      >
+    </button>
+  </div>
+</div>
+
+<style>
+  .carrusel {
+    --ancho-item: 17rem;
+  }
+
+  .carrusel__pista {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(85%, var(--ancho-item));
+    gap: var(--espacio-4);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    /* El scroll se detiene con el borde de la tarjeta alineado al margen */
+    scroll-padding-inline-start: 0;
+    padding-block: var(--espacio-1) var(--espacio-3);
+    /* Deja aire para que la sombra del hover no se corte */
+    padding-inline: var(--borde-grueso);
+    scrollbar-width: none;
+  }
+
+  .carrusel__pista::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carrusel__pista > :global(*) {
+    scroll-snap-align: start;
+    height: 100%;
+  }
+
+  /* ---------- Controles ---------- */
+  .carrusel__controles {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--espacio-3);
+    margin-top: var(--espacio-4);
+  }
+
+  .carrusel__flecha {
+    display: grid;
+    place-items: center;
+    width: var(--tamano-tactil);
+    height: var(--tamano-tactil);
+    padding: 0;
+    background-color: var(--color-superficie);
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio-pildora);
+    color: var(--color-titulo);
+    cursor: pointer;
+    transition:
+      background-color var(--transicion-rapida),
+      color var(--transicion-rapida);
+  }
+
+  .carrusel__flecha:hover {
+    background-color: var(--color-superficie-alt);
+  }
+
+  .carrusel__flecha svg {
+    width: var(--tamano-icono);
+    height: var(--tamano-icono);
+  }
+
+  .carrusel__puntos {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-2);
+  }
+
+  .carrusel__punto {
+    position: relative;
+    width: var(--espacio-2);
+    height: var(--espacio-2);
+    padding: 0;
+    background-color: var(--color-borde);
+    border: 0;
+    border-radius: var(--radio-pildora);
+    cursor: pointer;
+    transition:
+      width var(--transicion-media),
+      background-color var(--transicion-media);
+  }
+
+  .carrusel__punto[aria-selected='true'] {
+    width: var(--espacio-5);
+    background-color: var(--color-acento-texto);
+  }
+
+  /* El área táctil real es más grande que el punto visible */
+  .carrusel__punto::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--tamano-tactil);
+    height: var(--tamano-tactil);
+    transform: translate(-50%, -50%);
+  }
+
+  /* ---------- Escritorio ---------- */
+  @media (min-width: 64em) {
+    .carrusel__pista {
+      grid-auto-columns: calc(
+        (100% - (var(--por-vista) - 1) * var(--espacio-4)) / var(--por-vista)
+      );
+    }
+  }
+</style>
+
+<script>
+  const carruseles = document.querySelectorAll<HTMLElement>('[data-carrusel]');
+  const menosMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  carruseles.forEach((carrusel) => {
+    const pista = carrusel.querySelector<HTMLElement>('[data-pista]');
+    const puntos = carrusel.querySelector<HTMLElement>('[data-puntos]');
+    const anterior = carrusel.querySelector<HTMLButtonElement>('[data-anterior]');
+    const siguiente = carrusel.querySelector<HTMLButtonElement>('[data-siguiente]');
+    if (!pista) return;
+
+    const items = Array.from(pista.children) as HTMLElement[];
+    if (items.length === 0) return;
+
+    const intervalo = Number(carrusel.dataset.intervalo ?? 0);
+    let actual = 0;
+    let reloj: number | undefined;
+    let pausado = false;
+
+    // ---------- Puntos ----------
+    const botones: HTMLButtonElement[] = [];
+    if (puntos) {
+      items.forEach((_, indice) => {
+        const boton = document.createElement('button');
+        boton.type = 'button';
+        boton.className = 'carrusel__punto';
+        boton.setAttribute('role', 'tab');
+        boton.setAttribute('aria-label', `Tarjeta ${indice + 1} de ${items.length}`);
+        boton.addEventListener('click', () => irA(indice));
+        puntos.append(boton);
+        botones.push(boton);
+      });
+    }
+
+    function marcar(indice: number) {
+      actual = indice;
+      botones.forEach((boton, i) => {
+        boton.setAttribute('aria-selected', String(i === indice));
+      });
+    }
+
+    function irA(indice: number) {
+      const destino = items[(indice + items.length) % items.length];
+      if (!destino || !pista) return;
+      pista.scrollTo({
+        left: destino.offsetLeft - pista.offsetLeft,
+        behavior: menosMovimiento.matches ? 'auto' : 'smooth',
+      });
+    }
+
+    anterior?.addEventListener('click', () => irA(actual - 1));
+    siguiente?.addEventListener('click', () => irA(actual + 1));
+
+    // ---------- Punto activo según la posición del scroll ----------
+    const observador = new IntersectionObserver(
+      (entradas) => {
+        entradas
+          .filter((entrada) => entrada.isIntersecting)
+          .forEach((entrada) => {
+            const indice = items.indexOf(entrada.target as HTMLElement);
+            if (indice >= 0) marcar(indice);
+          });
+      },
+      { root: pista, threshold: 0.6 }
+    );
+    items.forEach((item) => observador.observe(item));
+    marcar(0);
+
+    // ---------- Avance automático ----------
+    function arrancar() {
+      if (intervalo <= 0 || menosMovimiento.matches || items.length < 2) return;
+      detener();
+      reloj = window.setInterval(() => {
+        if (!pausado && document.visibilityState === 'visible') irA(actual + 1);
+      }, intervalo);
+    }
+
+    function detener() {
+      if (reloj !== undefined) window.clearInterval(reloj);
+      reloj = undefined;
+    }
+
+    const pausar = () => (pausado = true);
+    const seguir = () => (pausado = false);
+
+    carrusel.addEventListener('mouseenter', pausar);
+    carrusel.addEventListener('mouseleave', seguir);
+    carrusel.addEventListener('focusin', pausar);
+    carrusel.addEventListener('focusout', seguir);
+    carrusel.addEventListener('pointerdown', pausar);
+    // Al tocar con el dedo, el avance automático no vuelve: manda el visitante
+    carrusel.addEventListener('touchstart', detener, { passive: true });
+
+    menosMovimiento.addEventListener('change', (evento) => {
+      if (evento.matches) detener();
+      else arrancar();
+    });
+
+    arrancar();
+  });
+</script>

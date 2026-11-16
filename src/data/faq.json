@@ -1,0 +1,41 @@
+{
+  "_instrucciones": "Preguntas frecuentes del inicio. Las que tienen la respuesta con [COMPLETAR] no se publican todavía: se muestran solo para recordar que falta definirlas. Para publicar una, reemplazar toda la respuesta.",
+  "preguntas": [
+    {
+      "pregunta": "¿Cuánto tarda la construcción?",
+      "respuesta": "La obra gris con terminación exterior se entrega en 30 días. Llave en mano lleva de 90 a 120 días, según el modelo y la terminación que elijas."
+    },
+    {
+      "pregunta": "¿Qué es el Wood Frame y por qué conviene?",
+      "respuesta": "Es un sistema de construcción en seco: la estructura se arma con perfiles de madera que forman paneles, y entre ellos va la aislación. Se construye mucho más rápido que con ladrillo, pesa menos y aísla mejor, así que la casa se mantiene templada y se gasta menos en calefacción y refrigeración."
+    },
+    {
+      "pregunta": "¿Qué es el sistema EIFS?",
+      "respuesta": "Es la terminación exterior aislante que usamos: una capa de poliestireno expandido sobre la pared, revestida con mallas y revoques especiales. Envuelve toda la casa sin cortes, así que corta los puentes térmicos y queda una fachada continua, lisa y lista para pintar."
+    },
+    {
+      "pregunta": "¿Construyen en mi zona?",
+      "respuesta": "Trabajamos en todo el país, con más actividad en Córdoba y Gran Buenos Aires. El flete está bonificado hasta 700 km; más lejos lo cotizamos aparte."
+    },
+    {
+      "pregunta": "¿La platea está incluida?",
+      "respuesta": "Sí. La platea de hormigón va incluida en el precio, tanto en obra gris como en llave en mano."
+    },
+    {
+      "pregunta": "¿Necesito tener el terreno o los planos?",
+      "respuesta": "[COMPLETAR] si se puede avanzar sin terreno, y qué pasa con los planos municipales: ¿los presenta el cliente o los hacen ustedes?"
+    },
+    {
+      "pregunta": "¿Cómo se paga la obra?",
+      "respuesta": "[COMPLETAR] la forma de pago: anticipo, cantidad de cuotas y en qué momento de la obra se paga cada una."
+    },
+    {
+      "pregunta": "¿Qué garantía tiene la casa?",
+      "respuesta": "[COMPLETAR] años de garantía y qué cubre (estructura, aislación, instalaciones)."
+    },
+    {
+      "pregunta": "¿Puedo modificar un modelo?",
+      "respuesta": "[COMPLETAR] hasta dónde se puede modificar un modelo del catálogo y si eso cambia el plazo o el precio."
+    }
+  ]
+}

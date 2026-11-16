@@ -1,0 +1,118 @@
+---
+/**
+ * Listado de una línea del catálogo. Las 4 páginas
+ * (/modelos/2-habitaciones/, /3-habitaciones/, /duplex/, /smart-ai/)
+ * salen de esta única plantilla.
+ */
+import Base from '../../../layouts/Base.astro';
+import TarjetaModelo from '../../../components/TarjetaModelo.astro';
+import Migas from '../../../components/Migas.astro';
+import SeccionCotizar from '../../../components/SeccionCotizar.astro';
+import { lineas, rutaLinea } from '../../../lib/sitio';
+import { modelosDeLinea } from '../../../lib/modelos';
+import { esPendiente } from '../../../lib/contenido';
+
+export function getStaticPaths() {
+  return lineas.map((linea) => ({
+    params: { linea: linea.slug },
+    props: { linea },
+  }));
+}
+
+const { linea } = Astro.props;
+const modelos = modelosDeLinea(linea.slug);
+const otras = lineas.filter((item) => item.slug !== linea.slug);
+const bajadaPendiente = esPendiente(linea.bajada);
+---
+
+<Base
+  titulo={`${linea.titulo} en Wood Frame`}
+  descripcion={`${modelos.length} modelos de ${linea.texto.toLowerCase()} de Smart Panel Constructora, con render, plano y metros. Obra gris con terminación exterior o llave en mano, en todo el país.`}
+>
+  <header class="seccion cabecera">
+    <div class="contenedor">
+      <Migas
+        pasos={[
+          { texto: 'Inicio', href: '/' },
+          { texto: 'Modelos', href: '/modelos/' },
+          { texto: linea.texto },
+        ]}
+      />
+
+      <span class="volanta">{modelos.length} modelos</span>
+      <h1>{linea.titulo}</h1>
+      <p class:list={['encabezado__bajada', { pendiente: bajadaPendiente }]}>
+        {bajadaPendiente ? linea.bajada.replace('[COMPLETAR]', 'Falta definir:') : linea.bajada}
+      </p>
+    </div>
+  </header>
+
+  <section class="seccion">
+    <div class="contenedor">
+      {
+        modelos.length > 0 ? (
+          <div class="grilla grilla--auto">
+            {modelos.map((modelo) => (
+              <TarjetaModelo modelo={modelo} mostrarLinea={false} />
+            ))}
+          </div>
+        ) : (
+          <p>Todavía no hay modelos cargados en esta línea.</p>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="seccion seccion--alt">
+    <div class="contenedor">
+      <div class="encabezado">
+        <span class="volanta">Seguí mirando</span>
+        <h2>Otras líneas del catálogo</h2>
+      </div>
+      <div class="grilla grilla--auto">
+        {
+          otras.map((item) => (
+            <a class="otra" href={rutaLinea(item.slug)}>
+              <h3>{item.texto}</h3>
+              <span aria-hidden="true">Ver la línea →</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <SeccionCotizar
+    titulo={`¿Te interesa alguna de ${linea.texto.toLowerCase()}?`}
+    bajada="Decinos cuál y dónde querés construir, y te mandamos la cotización por WhatsApp."
+  />
+</Base>
+
+<style>
+  .cabecera {
+    padding-bottom: 0;
+  }
+
+  /* ---------- Otras líneas ---------- */
+  .otra {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-3);
+    padding: var(--espacio-5);
+    background-color: var(--color-superficie);
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio-md);
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-medio);
+    text-decoration: none;
+    transition:
+      border-color var(--transicion-rapida),
+      transform var(--transicion-media);
+  }
+
+  .otra:hover {
+    border-color: var(--color-acento-texto);
+    transform: translateY(-2px);
+  }
+</style>

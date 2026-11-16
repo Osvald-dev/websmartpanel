@@ -1,0 +1,319 @@
+---
+/**
+ * Header fijo: logo, navegación principal y botón "Cotizar".
+ * En celular el menú se abre con un botón hamburguesa accesible
+ * (aria-expanded, cierre con Escape o al elegir un enlace).
+ *
+ * Probado desde 320px de ancho: logo + botón + hamburguesa entran sin
+ * desbordar (el desborde hacía que el celular achicara toda la página).
+ */
+import { sitio, navegacion, enlaceCotizar } from '../lib/sitio';
+
+// Marca como actual el enlace de la sección en la que estamos.
+const ruta = Astro.url.pathname;
+const esActual = (href: string) => ruta === href || ruta.startsWith(href);
+---
+
+<header class="header">
+  <div class="contenedor header__barra">
+    <a class="logo" href="/" aria-label={`${sitio.nombre}, ir al inicio`}>
+      <!-- public/logo.png: 320x440, blanco sobre transparente -->
+      <img class="logo__imagen" src="/logo.png" alt="" width="320" height="440" />
+    </a>
+
+    <nav class="nav" id="menu-principal" aria-label="Principal" data-menu>
+      <ul class="nav__lista" role="list">
+        {
+          navegacion.map((item) => (
+            <li>
+              <a class="nav__enlace" href={item.href} aria-current={esActual(item.href) ? 'page' : undefined}>
+                {item.texto}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="boton boton--primario nav__cta" href={enlaceCotizar}>Cotizar mi casa</a>
+    </nav>
+
+    <div class="header__acciones">
+      <a class="boton boton--primario header__cta" href={enlaceCotizar}>Cotizar</a>
+      <button
+        class="hamburguesa"
+        type="button"
+        aria-expanded="false"
+        aria-controls="menu-principal"
+        data-menu-boton
+      >
+        <span class="solo-lector" data-menu-etiqueta>Abrir menú</span>
+        <span class="hamburguesa__lineas" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: var(--capa-header);
+    border-bottom: var(--borde-fino) solid var(--color-borde);
+  }
+
+  /*
+   * El fondo esmerilado va en un pseudo-elemento y no en .header:
+   * backdrop-filter sobre el header convertía al header en el marco de
+   * referencia del menú y el panel de celular quedaba aplastado.
+   */
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--color-header);
+    backdrop-filter: saturate(1.4) blur(14px);
+  }
+
+  .header__barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espacio-3);
+    min-height: var(--alto-header);
+  }
+
+  /* ---------- Logo ---------- */
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    min-height: var(--tamano-tactil);
+  }
+
+  .logo__imagen {
+    width: auto;
+    height: 3.25rem;
+  }
+
+  /* ---------- Acciones ---------- */
+  .header__acciones {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-1);
+    flex-shrink: 0;
+  }
+
+  .header__cta {
+    min-height: 2.5rem;
+    padding: var(--espacio-2) var(--espacio-4);
+  }
+
+  /* ---------- Hamburguesa (solo celular/tablet) ---------- */
+  .hamburguesa {
+    display: grid;
+    place-items: center;
+    width: var(--tamano-tactil);
+    height: var(--tamano-tactil);
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: var(--radio-sm);
+    color: var(--color-titulo);
+    cursor: pointer;
+  }
+
+  .hamburguesa__lineas,
+  .hamburguesa__lineas::before,
+  .hamburguesa__lineas::after {
+    display: block;
+    width: var(--espacio-5);
+    height: var(--borde-grueso);
+    background-color: currentColor;
+    border-radius: var(--radio-pildora);
+    transition: transform var(--transicion-media), opacity var(--transicion-rapida);
+  }
+
+  .hamburguesa__lineas {
+    position: relative;
+  }
+
+  .hamburguesa__lineas::before,
+  .hamburguesa__lineas::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .hamburguesa__lineas::before {
+    transform: translateY(calc(-1 * var(--espacio-2)));
+  }
+
+  .hamburguesa__lineas::after {
+    transform: translateY(var(--espacio-2));
+  }
+
+  /* Se transforma en una X cuando el menú está abierto */
+  .hamburguesa[aria-expanded='true'] .hamburguesa__lineas {
+    background-color: transparent;
+  }
+
+  .hamburguesa[aria-expanded='true'] .hamburguesa__lineas::before {
+    transform: rotate(45deg);
+  }
+
+  .hamburguesa[aria-expanded='true'] .hamburguesa__lineas::after {
+    transform: rotate(-45deg);
+  }
+
+  /* ---------- Navegación: panel a pantalla completa en celular ---------- */
+  .nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: var(--capa-menu);
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-6);
+    height: calc(100vh - var(--alto-header));
+    height: calc(100dvh - var(--alto-header));
+    padding: var(--espacio-5) var(--margen-lateral) var(--espacio-7);
+    background-color: var(--color-fondo);
+    overflow-y: auto;
+    /* Oculto por defecto; JS agrega data-abierto */
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--espacio-2)));
+    transition:
+      opacity var(--transicion-media),
+      transform var(--transicion-media),
+      visibility 0s linear 280ms;
+  }
+
+  .nav[data-abierto] {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition: opacity var(--transicion-media), transform var(--transicion-media);
+  }
+
+  .nav__lista {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav__enlace {
+    display: flex;
+    align-items: center;
+    min-height: 3.5rem;
+    border-bottom: var(--borde-fino) solid var(--color-borde);
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-xl);
+    font-weight: var(--peso-fuerte);
+    letter-spacing: -0.01em;
+    color: var(--color-titulo);
+    text-decoration: none;
+  }
+
+  .nav__enlace[aria-current='page'] {
+    color: var(--color-acento-texto);
+  }
+
+  /* ---------- Escritorio: menú en línea, sin hamburguesa ---------- */
+  @media (min-width: 64em) {
+    .hamburguesa,
+    .nav__cta {
+      display: none;
+    }
+
+    .header__cta {
+      min-height: var(--tamano-tactil);
+      padding-inline: var(--espacio-5);
+    }
+
+    .header__cta::after {
+      content: '\00a0mi casa';
+    }
+
+    .nav {
+      position: static;
+      display: block;
+      height: auto;
+      padding: 0;
+      background: none;
+      overflow: visible;
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .nav__lista {
+      flex-direction: row;
+      gap: var(--espacio-1);
+    }
+
+    .nav__enlace {
+      min-height: var(--tamano-tactil);
+      padding: var(--espacio-2) var(--espacio-3);
+      border-bottom: 0;
+      border-radius: var(--radio-pildora);
+      font-size: var(--texto-sm);
+      font-weight: var(--peso-medio);
+      letter-spacing: 0;
+      color: var(--color-texto-suave);
+      transition: color var(--transicion-rapida), background-color var(--transicion-rapida);
+    }
+
+    .nav__enlace:hover {
+      color: var(--color-titulo);
+      background-color: rgb(255 255 255 / 0.08);
+    }
+
+    .nav__enlace[aria-current='page'] {
+      color: var(--color-titulo);
+      background-color: rgb(255 255 255 / 0.1);
+    }
+  }
+</style>
+
+<script>
+  const boton = document.querySelector<HTMLButtonElement>('[data-menu-boton]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  const etiqueta = document.querySelector<HTMLElement>('[data-menu-etiqueta]');
+  const escritorio = window.matchMedia('(min-width: 64em)');
+
+  function cambiarMenu(abrir: boolean) {
+    if (!boton || !menu) return;
+    boton.setAttribute('aria-expanded', String(abrir));
+    menu.toggleAttribute('data-abierto', abrir);
+    if (etiqueta) etiqueta.textContent = abrir ? 'Cerrar menú' : 'Abrir menú';
+    // Bloquea el scroll de fondo y avisa al botón de WhatsApp que se oculte
+    document.documentElement.toggleAttribute('data-menu-abierto', abrir);
+    document.body.style.overflow = abrir ? 'hidden' : '';
+  }
+
+  boton?.addEventListener('click', () => {
+    cambiarMenu(boton.getAttribute('aria-expanded') !== 'true');
+  });
+
+  // Cerrar al elegir un enlace (incluye anclas dentro de la misma página)
+  menu?.addEventListener('click', (evento) => {
+    if ((evento.target as HTMLElement).closest('a')) cambiarMenu(false);
+  });
+
+  // Cerrar con Escape y devolver el foco al botón
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && boton?.getAttribute('aria-expanded') === 'true') {
+      cambiarMenu(false);
+      boton.focus();
+    }
+  });
+
+  // Si se agranda la ventana a escritorio con el menú abierto, se resetea
+  escritorio.addEventListener('change', (evento) => {
+    if (evento.matches) cambiarMenu(false);
+  });
+</script>

@@ -1,0 +1,179 @@
+---
+/**
+ * Tarjeta de un modelo, igual en el catálogo, en los listados por línea
+ * y en el carrusel del inicio. Toda la tarjeta es un enlace.
+ *
+ * Mientras el modelo no tenga render ni metros cargados muestra el estado
+ * "ficha en preparación" en lugar de dejar huecos sin explicación.
+ */
+import { Image } from 'astro:assets';
+import ImagenPlaceholder from './ImagenPlaceholder.astro';
+import { imagenRender } from '../lib/imagenes';
+import { estaCargado, resumenTarjeta, nombreLinea, type Modelo } from '../lib/modelos';
+import { rutaModelo } from '../lib/sitio';
+
+interface Props {
+  modelo: Modelo;
+  /** Muestra la línea a la que pertenece (útil en el catálogo general). */
+  mostrarLinea?: boolean;
+}
+
+const { modelo, mostrarLinea = true } = Astro.props;
+
+const cargado = estaCargado(modelo);
+const render = imagenRender(modelo.imagenes.frente);
+const datos = resumenTarjeta(modelo);
+const href = rutaModelo(modelo.linea, modelo.slug);
+---
+
+<article
+  class="modelo tarjeta"
+  data-modelo
+  data-linea={modelo.linea}
+  data-habitaciones={modelo.habitaciones ?? ''}
+  data-m2={modelo.m2Cubiertos ?? ''}
+>
+  <div class="modelo__imagen">
+    {
+      render ? (
+        <Image
+          class="modelo__foto"
+          src={render}
+          alt={`Render del frente del modelo ${modelo.nombre}`}
+          widths={[320, 480, 640, 960]}
+          sizes="(min-width: 64em) 24rem, (min-width: 40em) 45vw, 90vw"
+          loading="lazy"
+        />
+      ) : (
+        <ImagenPlaceholder etiqueta="Render frontal" tipo="casa" relacion="16 / 9" />
+      )
+    }
+    {!cargado && <span class="etiqueta modelo__estado">Ficha en preparación</span>}
+  </div>
+
+  <div class="tarjeta__cuerpo">
+    {mostrarLinea && <span class="modelo__linea">{nombreLinea(modelo.linea)}</span>}
+
+    <h3 class="modelo__nombre">
+      <a href={href}>{modelo.nombre}</a>
+    </h3>
+
+    {modelo.descripcionCorta && <p class="modelo__texto texto-suave">{modelo.descripcionCorta}</p>}
+
+    {
+      datos.length > 0 && (
+        <dl class="modelo__datos">
+          {datos.map((item) => (
+            <div>
+              <dt>{item.etiqueta}</dt>
+              <dd>{item.valor}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    <span class="modelo__ver" aria-hidden="true">Ver el modelo →</span>
+  </div>
+</article>
+
+<style>
+  .modelo {
+    position: relative;
+    transition:
+      transform var(--transicion-media),
+      box-shadow var(--transicion-media);
+  }
+
+  /* Toda la tarjeta es clickeable, pero el enlace real sigue siendo el título */
+  .modelo__nombre a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .modelo:has(a:hover),
+  .modelo:has(a:focus-visible) {
+    transform: translateY(-3px);
+    box-shadow: var(--brillo);
+  }
+
+  .modelo__imagen {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modelo__foto {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .modelo:has(a:hover) .modelo__foto {
+    transform: scale(1.04);
+  }
+
+  .modelo__estado {
+    position: absolute;
+    top: var(--espacio-3);
+    left: var(--espacio-3);
+    background-color: var(--color-superficie);
+    color: var(--color-texto-suave);
+    box-shadow: var(--sombra-sm);
+  }
+
+  .modelo__linea {
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-xs);
+    font-weight: var(--peso-medio);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-acento-texto);
+  }
+
+  .modelo__nombre {
+    font-size: var(--texto-lg);
+    font-weight: var(--peso-fuerte);
+  }
+
+  .modelo__nombre a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .modelo__texto {
+    font-size: var(--texto-sm);
+  }
+
+  .modelo__datos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio-2) var(--espacio-5);
+    margin-top: var(--espacio-1);
+  }
+
+  .modelo__datos dt {
+    font-size: var(--texto-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-texto-suave);
+  }
+
+  .modelo__datos dd {
+    margin: 0;
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-md);
+    font-weight: var(--peso-medio);
+    color: var(--color-titulo);
+  }
+
+  .modelo__ver {
+    margin-top: auto;
+    padding-top: var(--espacio-2);
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-medio);
+    color: var(--color-enlace);
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+/**
+ * Página del servicio llave en mano.
+ * Todo el contenido sale de src/data/servicios.json.
+ */
+import Base from '../layouts/Base.astro';
+import PaginaServicio from '../components/PaginaServicio.astro';
+import { buscarServicio } from '../lib/contenido';
+
+const servicio = buscarServicio('llave-en-mano')!;
+const otro = buscarServicio('obra-gris');
+---
+
+<Base
+  titulo="Casas llave en mano en 90 a 120 días"
+  descripcion="Recibís la casa terminada y lista para habitar: de la platea a la última mano de pintura, en 90 a 120 días. Mirá la ficha técnica completa de materiales."
+>
+  <PaginaServicio servicio={servicio} otro={otro} />
+</Base>

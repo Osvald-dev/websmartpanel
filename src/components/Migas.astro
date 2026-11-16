@@ -1,0 +1,53 @@
+---
+/**
+ * Migas de pan. El último item es la página actual y no se enlaza.
+ */
+interface Paso {
+  texto: string;
+  href?: string;
+}
+
+interface Props {
+  pasos: Paso[];
+}
+
+const { pasos } = Astro.props;
+---
+
+<nav class="migas" aria-label="Dónde estás">
+  <ol role="list">
+    {
+      pasos.map((paso, indice) => (
+        <li aria-current={indice === pasos.length - 1 ? 'page' : undefined}>
+          {paso.href ? <a href={paso.href}>{paso.texto}</a> : paso.texto}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .migas {
+    margin-bottom: var(--espacio-4);
+    font-size: var(--texto-sm);
+    color: var(--color-texto-suave);
+  }
+
+  .migas ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio-2);
+    padding: 0;
+    list-style: none;
+  }
+
+  .migas li + li::before {
+    content: '/';
+    margin-right: var(--espacio-2);
+    color: var(--color-borde);
+  }
+
+  .migas a {
+    color: inherit;
+  }
+</style>

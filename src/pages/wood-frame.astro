@@ -1,0 +1,248 @@
+---
+/**
+ * Qué es el Wood Frame y por qué conviene.
+ * Página de contenido: explica el sistema para quien llega sin saber nada.
+ * Los datos propios de la empresa salen de sitio.json.
+ */
+import Base from '../layouts/Base.astro';
+import Migas from '../components/Migas.astro';
+import ImagenPlaceholder from '../components/ImagenPlaceholder.astro';
+import SeccionCotizar from '../components/SeccionCotizar.astro';
+import { sitio } from '../lib/sitio';
+
+const ventajas = [
+  {
+    titulo: 'Se construye mucho más rápido',
+    texto: `La estructura se arma en paneles y no hay que esperar que fragüe nada: la obra gris se entrega en ${sitio.plazoObraGris} y la casa llave en mano, de ${sitio.plazoLlaveEnMano}.`,
+  },
+  {
+    titulo: 'Aísla mejor que el ladrillo',
+    texto: 'Entre los montantes va aislación y por fuera va el sistema EIFS. La casa se mantiene templada y se gasta menos en calefacción y en refrigeración.',
+  },
+  {
+    titulo: 'Pesa menos',
+    texto: 'Al ser más liviana, la fundación es más simple y rinde mejor en terrenos donde una construcción tradicional se encarece.',
+  },
+  {
+    titulo: 'Las instalaciones quedan accesibles',
+    texto: 'Caños y cables van dentro de los paneles, por ductos previstos: una modificación futura no implica romper paredes.',
+  },
+  {
+    titulo: 'La obra es más limpia y previsible',
+    texto: 'Se trabaja en seco, con materiales medidos. Hay menos desperdicio y menos sorpresas en el presupuesto.',
+  },
+  {
+    titulo: 'Se amplía sin drama',
+    texto: 'Sumar un ambiente más adelante es agregar paneles, no demoler.',
+  },
+];
+
+const capas = [
+  {
+    titulo: 'Platea de hormigón',
+    texto: 'La base de la casa, incluida en el precio. Se calcula para el modelo y el terreno.',
+  },
+  {
+    titulo: 'Estructura de madera',
+    texto: 'Montantes y soleras que forman los paneles de muros y techo. Es el esqueleto de la casa.',
+  },
+  {
+    titulo: 'Aislación',
+    texto: 'Va entre los montantes y corta el paso del frío, del calor y del ruido.',
+  },
+  {
+    titulo: 'Sistema EIFS por fuera',
+    texto: 'Una capa continua de poliestireno expandido con mallas y revoques especiales. Envuelve toda la casa sin cortes y queda lista para pintar.',
+  },
+  {
+    titulo: 'Terminación interior',
+    texto: 'Placas interiores y, según el servicio que elijas, pisos, pintura y revestimientos.',
+  },
+];
+---
+
+<Base
+  titulo="¿Qué es el Wood Frame y por qué conviene?"
+  descripcion="El Wood Frame es construcción en seco: estructura de madera en paneles, aislación entre montantes y terminación exterior EIFS. Más rápido que el ladrillo, más aislado y más previsible en costo."
+>
+  <header class="seccion cabecera">
+    <div class="contenedor">
+      <Migas pasos={[{ texto: 'Inicio', href: '/' }, { texto: 'Wood Frame' }]} />
+      <span class="volanta">El sistema</span>
+      <h1>¿Qué es el Wood Frame y por qué conviene?</h1>
+      <p class="encabezado__bajada">
+        Es el sistema con el que construimos. Nada de experimentos: es la forma en que se construye
+        la mayoría de las casas en Estados Unidos, Canadá, Japón y los países nórdicos, adaptada a
+        lo que se consigue acá.
+      </p>
+    </div>
+  </header>
+
+  <section class="seccion">
+    <div class="contenedor dos-columnas">
+      <div class="prosa">
+        <h2>En criollo: ¿cómo se construye?</h2>
+        <p>
+          En vez de levantar paredes ladrillo por ladrillo, la casa se arma con paneles. Cada panel
+          es una estructura de madera (montantes verticales y soleras horizontales) que se cierra
+          por los dos lados con placas y se rellena con aislación.
+        </p>
+        <p>
+          Esos paneles se montan sobre la platea de hormigón y se van uniendo entre sí hasta formar
+          muros y techo. Después se cubre todo por fuera con el sistema EIFS, que es el que le da la
+          terminación y la aislación exterior.
+        </p>
+        <p>
+          El resultado es una casa sólida, fresca en verano y abrigada en invierno, que se construye
+          en semanas en lugar de años.
+        </p>
+      </div>
+
+      <ImagenPlaceholder etiqueta="Corte del panel Wood Frame" tipo="plano" relacion="1 / 1" />
+    </div>
+  </section>
+
+  <section class="seccion seccion--alt">
+    <div class="contenedor">
+      <div class="encabezado">
+        <span class="volanta">Capa por capa</span>
+        <h2>Qué hay adentro de una pared</h2>
+      </div>
+
+      <ol class="capas" role="list">
+        {
+          capas.map((capa, indice) => (
+            <li class="capa">
+              <span class="capa__numero" aria-hidden="true">{indice + 1}</span>
+              <div>
+                <h3>{capa.titulo}</h3>
+                <p class="texto-suave">{capa.texto}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="encabezado">
+        <span class="volanta">Por qué conviene</span>
+        <h2>Seis razones concretas</h2>
+      </div>
+
+      <div class="grilla grilla--auto">
+        {
+          ventajas.map((ventaja) => (
+            <div class="ventaja">
+              <h3>{ventaja.titulo}</h3>
+              <p class="texto-suave">{ventaja.texto}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--contraste">
+    <div class="contenedor prosa">
+      <h2>Dos dudas que siempre aparecen</h2>
+      <h3>¿Aguanta igual que una casa de ladrillo?</h3>
+      <p>
+        Sí. Es un sistema estructural calculado, con normas propias, que se usa hace más de un siglo
+        en países con nieve, terremotos y huracanes. Lo que cambia es cómo trabaja: en lugar de
+        apoyarse en el peso, trabaja distribuyendo las cargas.
+      </p>
+      <h3>¿Y el ruido o la humedad?</h3>
+      <p>
+        La aislación que va entre los montantes también corta el ruido. Contra la humedad, lo que
+        importa es que la envolvente esté bien hecha: barreras en el orden correcto y el EIFS
+        continuo por fuera, sin cortes. Esa es la parte que no se ve y es la que define si una casa
+        en seco sale buena o mala.
+      </p>
+    </div>
+  </section>
+
+  <SeccionCotizar
+    titulo="¿Te cierra el sistema? Veamos tu caso"
+    bajada="Contanos cuántos metros querés construir y dónde, y te mandamos la cotización por WhatsApp."
+  />
+</Base>
+
+<style>
+  .cabecera {
+    padding-bottom: 0;
+  }
+
+  .cabecera .encabezado__bajada {
+    max-width: 58ch;
+  }
+
+  .dos-columnas {
+    display: grid;
+    gap: var(--espacio-6);
+    align-items: start;
+  }
+
+  /* ---------- Capas ---------- */
+  .capas {
+    display: grid;
+    gap: var(--espacio-4);
+    padding: 0;
+    list-style: none;
+  }
+
+  .capa {
+    display: grid;
+    grid-template-columns: var(--espacio-6) 1fr;
+    gap: var(--espacio-4);
+    align-items: start;
+    padding: var(--espacio-4);
+    background-color: var(--color-superficie);
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio-md);
+  }
+
+  .capa__numero {
+    display: grid;
+    place-items: center;
+    width: var(--espacio-6);
+    height: var(--espacio-6);
+    background-color: var(--color-contraste);
+    color: var(--color-inverso);
+    border-radius: var(--radio-pildora);
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-fuerte);
+  }
+
+  .capa p {
+    margin-top: var(--espacio-1);
+    font-size: var(--texto-sm);
+  }
+
+  /* ---------- Ventajas ---------- */
+  .ventaja {
+    padding: var(--espacio-5);
+    background-color: var(--color-superficie);
+    border-left: var(--borde-grueso) solid var(--color-acento-texto);
+    border-radius: var(--radio-sm);
+  }
+
+  .ventaja p {
+    margin-top: var(--espacio-2);
+    font-size: var(--texto-sm);
+  }
+
+  @media (min-width: 64em) {
+    .dos-columnas {
+      grid-template-columns: 1.3fr 1fr;
+      gap: var(--espacio-7);
+    }
+
+    .capas {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

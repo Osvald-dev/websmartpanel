@@ -1,0 +1,441 @@
+---
+/**
+ * Página de un modelo. Las 30 salen de esta única plantilla: para agregar
+ * o corregir un modelo se edita src/data/modelos.json, nunca este archivo.
+ *
+ * Mientras el modelo no tenga render, plano y metros cargados, la página
+ * se arma igual y avisa qué falta, para poder revisar la estructura antes
+ * de tener el material.
+ */
+import { Image } from 'astro:assets';
+import Base from '../../../layouts/Base.astro';
+import Migas from '../../../components/Migas.astro';
+import ImagenPlaceholder from '../../../components/ImagenPlaceholder.astro';
+import TarjetaModelo from '../../../components/TarjetaModelo.astro';
+import SeccionCotizar from '../../../components/SeccionCotizar.astro';
+import { lineas, rutaLinea, enlaceWhatsApp } from '../../../lib/sitio';
+import { modelos, especificaciones, estaCargado, modelosDeLinea } from '../../../lib/modelos';
+import { servicios } from '../../../lib/contenido';
+import { imagenRender, imagenPlano } from '../../../lib/imagenes';
+
+export function getStaticPaths() {
+  return modelos.map((modelo) => ({
+    params: { linea: modelo.linea, modelo: modelo.slug },
+    props: { modelo },
+  }));
+}
+
+const { modelo } = Astro.props;
+
+const linea = lineas.find((item) => item.slug === modelo.linea);
+const nombreLinea = linea?.texto ?? modelo.linea;
+const datos = especificaciones(modelo);
+const cargado = estaCargado(modelo);
+
+const render = imagenRender(modelo.imagenes.frente);
+// Solo los planos cuyo archivo existe: un nombre mal escrito no rompe la página.
+const planos = modelo.imagenes.planos.flatMap((plano) => {
+  const imagen = imagenPlano(plano.archivo);
+  return imagen ? [{ imagen, etiqueta: plano.etiqueta }] : [];
+});
+
+// Otros modelos de la misma línea, hasta 3, para seguir mirando.
+const relacionados = modelosDeLinea(modelo.linea)
+  .filter((item) => item.slug !== modelo.slug)
+  .slice(0, 3);
+
+const mensaje = `¡Hola Smart Panel! Quiero consultar por el ${modelo.nombre}.`;
+
+const descripcionMeta = modelo.descripcionCorta
+  ? `${modelo.nombre}: ${modelo.descripcionCorta}`
+  : `${modelo.nombre} de Smart Panel Constructora, línea ${nombreLinea.toLowerCase()}. Casa en Wood Frame con obra gris con terminación exterior o llave en mano, en todo el país.`;
+---
+
+<Base
+  titulo={`${modelo.nombre} | Casa en Wood Frame`}
+  descripcion={descripcionMeta}
+  mensajeWhatsApp={mensaje}
+>
+  <article class="modelo">
+    <div class="contenedor modelo__cabecera">
+      <Migas
+        pasos={[
+          { texto: 'Inicio', href: '/' },
+          { texto: 'Modelos', href: '/modelos/' },
+          { texto: nombreLinea, href: rutaLinea(modelo.linea) },
+          { texto: modelo.nombre },
+        ]}
+      />
+    </div>
+
+    <div class="contenedor modelo__grilla">
+      <!-- ---------- Imágenes ---------- -->
+      <div class="modelo__media">
+        <figure class="modelo__figura">
+          {
+            render ? (
+              <Image
+                class="modelo__foto"
+                src={render}
+                alt={`Render del frente del modelo ${modelo.nombre}`}
+                widths={[480, 800, 1200, 1920]}
+                sizes="(min-width: 64em) 55vw, 100vw"
+                loading="eager"
+              />
+            ) : (
+              <ImagenPlaceholder etiqueta="Render frontal" tipo="casa" relacion="16 / 9" />
+            )
+          }
+        </figure>
+
+      </div>
+
+      <!-- ---------- Datos y acciones ---------- -->
+      <div class="modelo__info">
+        <span class="volanta">{nombreLinea}</span>
+        <h1>{modelo.nombre}</h1>
+
+        {
+          modelo.descripcionCorta && (
+            <p class="modelo__bajada">{modelo.descripcionCorta}</p>
+          )
+        }
+
+        {
+          !cargado && (
+            <p class="aviso">
+              Ficha en preparación: faltan cargar el render o las medidas de este modelo.
+            </p>
+          )
+        }
+
+        {
+          datos.length > 0 && (
+            <dl class="especs">
+              {datos.map((item) => (
+                <div class="especs__item">
+                  <dt>{item.etiqueta}</dt>
+                  <dd>{item.valor}</dd>
+                </div>
+              ))}
+            </dl>
+          )
+        }
+
+        {
+          modelo.ambientes.length > 0 && (
+            <p class="modelo__ambientes">
+              <strong>Ambientes:</strong> {modelo.ambientes.join(' · ')}
+            </p>
+          )
+        }
+
+        <div class="modelo__acciones">
+          <a class="boton boton--whatsapp" href={enlaceWhatsApp(mensaje)} rel="noopener">
+            Consultar este modelo
+          </a>
+          <a class="boton boton--secundario" href="#cotizar">Pedir cotización</a>
+        </div>
+
+        <p class="modelo__nota texto-suave">
+          Este modelo se puede adaptar: mover una pared, sumar un ambiente o cambiar la galería.
+          Contanos qué necesitás y lo vemos.
+        </p>
+      </div>
+    </div>
+
+    <!-- ---------- Planos ---------- -->
+    <section class="seccion seccion--alt modelo__planos-seccion">
+      <div class="contenedor">
+        <div class="encabezado">
+          <span class="volanta">{planos.length > 1 ? 'Planos' : 'Plano'}</span>
+          <h2>Cómo se distribuye el {modelo.nombre}</h2>
+        </div>
+        <div class:list={['modelo__planos', { 'modelo__planos--dos': planos.length > 1 }]}>
+        {
+            planos.length === 0 && (
+              <figure class="modelo__figura">
+                <ImagenPlaceholder etiqueta="Plano en preparación" tipo="plano" relacion="16 / 9" />
+              </figure>
+            )
+          }
+
+          {
+            planos.map((plano) => (
+              <figure class="modelo__figura">
+                {/* Tocar el plano lo abre a tamaño completo, para hacer zoom en el celular */}
+                <a class="modelo__plano" href={plano.imagen.src} target="_blank" rel="noopener">
+                  <Image
+                    src={plano.imagen}
+                    alt={`Plano del modelo ${modelo.nombre}, ${plano.etiqueta.toLowerCase()}`}
+                    widths={[480, 800, 1200, 1920]}
+                    sizes="(min-width: 64em) 55vw, 100vw"
+                    loading="lazy"
+                  />
+                </a>
+                <figcaption class="texto-suave">
+                  {plano.etiqueta} · tocá el plano para verlo en grande
+                </figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Descripción larga y características ---------- -->
+    {
+      (modelo.descripcionLarga || modelo.caracteristicas.length > 0) && (
+        <section class="seccion">
+          <div class="contenedor modelo__detalle">
+            {
+              modelo.descripcionLarga && (
+                <div class="prosa">
+                  <h2>Cómo es el {modelo.nombre}</h2>
+                  <p>{modelo.descripcionLarga}</p>
+                  {modelo.notas && <p class="texto-suave">{modelo.notas}</p>}
+                </div>
+              )
+            }
+
+            {
+              modelo.caracteristicas.length > 0 && (
+                <div>
+                  <h2>Características</h2>
+                  <ul class="lista-marcada" role="list">
+                    {modelo.caracteristicas.map((caracteristica) => (
+                      <li>{caracteristica}</li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            }
+          </div>
+        </section>
+      )
+    }
+
+    <!-- ---------- Cómo se entrega ---------- -->
+    <section class="seccion seccion--alt">
+      <div class="contenedor">
+        <div class="encabezado">
+          <span class="volanta">Cómo se entrega</span>
+          <h2>Elegís hasta dónde llegamos con el {modelo.nombre}</h2>
+          <p class="encabezado__bajada">
+            El mismo modelo se puede construir en obra gris con terminación exterior o llave en
+            mano. En cada ficha técnica está el detalle de materiales.
+          </p>
+        </div>
+
+        <div class="grilla grilla--2">
+          {
+            servicios.map((servicio) => (
+              <a class="servicio" href={`/${servicio.slug}/`}>
+                <span class="etiqueta">{servicio.plazo}</span>
+                <h3>{servicio.nombre}</h3>
+                <p class="texto-suave">{servicio.bajada}</p>
+                <span class="servicio__ver" aria-hidden="true">Ver la ficha técnica →</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Otros modelos de la línea ---------- -->
+    {
+      relacionados.length > 0 && (
+        <section class="seccion">
+          <div class="contenedor">
+            <div class="encabezado">
+              <span class="volanta">Seguí mirando</span>
+              <h2>Otros modelos de {nombreLinea.toLowerCase()}</h2>
+            </div>
+            <div class="grilla grilla--auto">
+              {relacionados.map((item) => (
+                <TarjetaModelo modelo={item} mostrarLinea={false} />
+              ))}
+            </div>
+            <p class="modelo__volver">
+              <a class="boton boton--secundario" href={rutaLinea(modelo.linea)}>
+                Ver toda la línea
+              </a>
+            </p>
+          </div>
+        </section>
+      )
+    }
+
+    <SeccionCotizar
+      modelo={modelo.nombre}
+      titulo={`Cotizá el ${modelo.nombre}`}
+      bajada="Dejanos tus datos y te mandamos por WhatsApp el precio de este modelo según el servicio que elijas."
+    />
+  </article>
+</Base>
+
+<style>
+  .modelo__cabecera {
+    padding-top: var(--espacio-6);
+  }
+
+  .modelo__grilla {
+    display: grid;
+    gap: var(--espacio-6);
+    padding-bottom: var(--espacio-seccion);
+  }
+
+  /* ---------- Imágenes ---------- */
+  .modelo__media {
+    display: grid;
+    gap: var(--espacio-4);
+  }
+
+  .modelo__figura {
+    margin: 0;
+  }
+
+  .modelo__figura :global(.hueco),
+  .modelo__figura :global(img) {
+    width: 100%;
+    border-radius: var(--radio-md);
+  }
+
+  /* Los planos tienen fondo blanco: el marco los integra al sitio oscuro */
+  .modelo__plano {
+    display: block;
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio-md);
+    overflow: hidden;
+  }
+
+  .modelo__figura figcaption {
+    margin-top: var(--espacio-2);
+    font-size: var(--texto-xs);
+  }
+
+  .modelo__planos {
+    display: grid;
+    gap: var(--espacio-5);
+    max-width: 60rem;
+  }
+
+  @media (min-width: 64em) {
+    .modelo__planos--dos {
+      grid-template-columns: 1fr 1fr;
+      max-width: none;
+    }
+  }
+
+  /* ---------- Información ---------- */
+  .modelo__bajada {
+    margin-top: var(--espacio-4);
+    font-size: var(--texto-md);
+    color: var(--color-texto-suave);
+  }
+
+  .aviso {
+    margin-top: var(--espacio-5);
+    padding: var(--espacio-4);
+    background-color: var(--color-superficie-alt);
+    border-left: var(--borde-grueso) solid var(--color-acento-texto);
+    border-radius: var(--radio-sm);
+    font-size: var(--texto-sm);
+    color: var(--color-texto-suave);
+  }
+
+  .especs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+    gap: var(--espacio-4);
+    margin-top: var(--espacio-6);
+    padding-block: var(--espacio-5);
+    border-block: var(--borde-fino) solid var(--color-borde);
+  }
+
+  .especs__item dt {
+    font-size: var(--texto-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-texto-suave);
+  }
+
+  .especs__item dd {
+    margin: 0;
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-lg);
+    font-weight: var(--peso-fuerte);
+    color: var(--color-titulo);
+  }
+
+  .modelo__ambientes {
+    margin-top: var(--espacio-4);
+    font-size: var(--texto-sm);
+  }
+
+  .modelo__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio-3);
+    margin-top: var(--espacio-6);
+  }
+
+  .modelo__nota {
+    margin-top: var(--espacio-4);
+    font-size: var(--texto-sm);
+  }
+
+  /* ---------- Detalle ---------- */
+  .modelo__detalle {
+    display: grid;
+    gap: var(--espacio-6);
+  }
+
+  /* ---------- Servicios ---------- */
+  .servicio {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--espacio-3);
+    padding: var(--espacio-5);
+    background-color: var(--color-superficie);
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio-md);
+    text-decoration: none;
+    transition:
+      border-color var(--transicion-rapida),
+      transform var(--transicion-media);
+  }
+
+  .servicio:hover {
+    border-color: var(--color-acento-texto);
+    transform: translateY(-2px);
+  }
+
+  .servicio__ver {
+    margin-top: auto;
+    padding-top: var(--espacio-3);
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-medio);
+    color: var(--color-enlace);
+  }
+
+  .modelo__volver {
+    margin-top: var(--espacio-6);
+  }
+
+  /* ---------- Escritorio ---------- */
+  @media (min-width: 64em) {
+    .modelo__grilla {
+      grid-template-columns: 1.15fr 1fr;
+      gap: var(--espacio-7);
+      align-items: start;
+    }
+
+    .modelo__detalle {
+      grid-template-columns: 1.3fr 1fr;
+      gap: var(--espacio-7);
+    }
+  }
+</style>

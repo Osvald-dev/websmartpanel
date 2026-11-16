@@ -1,0 +1,447 @@
+---
+/**
+ * Inicio. El orden de las secciones es el aprobado en CLAUDE.md:
+ * hero → líneas → destacados → por qué elegirnos → obra gris vs llave en
+ * mano → cómo trabajamos → obras → testimonios → preguntas → cotización.
+ */
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Carrusel from '../components/Carrusel.astro';
+import TarjetaModelo from '../components/TarjetaModelo.astro';
+import ImagenPlaceholder from '../components/ImagenPlaceholder.astro';
+import Faq from '../components/Faq.astro';
+import SeccionCotizar from '../components/SeccionCotizar.astro';
+import { sitio, lineas, rutaLinea } from '../lib/sitio';
+import { modelos, destacados, conteoPorLinea } from '../lib/modelos';
+import { servicios, preguntasPublicadas, testimonios, obras } from '../lib/contenido';
+
+const conteo = conteoPorLinea();
+
+const pasos = [
+  {
+    titulo: 'Nos contás qué necesitás',
+    texto: 'Cuántas habitaciones, cuántos metros, dónde y para cuándo. Con eso ya te damos un número.',
+  },
+  {
+    titulo: 'Diseñamos y te mostramos el render',
+    texto: 'Elegís un modelo del catálogo o lo adaptamos. Ves cómo va a quedar tu casa antes de empezar.',
+  },
+  {
+    titulo: 'Acordamos el plan de pagos',
+    texto: '[COMPLETAR] cómo se arma el plan de pagos: anticipo, cuotas y en qué etapa se paga cada una.',
+  },
+  {
+    titulo: 'Construimos y te entregamos',
+    texto: `Obra gris con terminación exterior en ${sitio.plazoObraGris}. Llave en mano, de ${sitio.plazoLlaveEnMano}.`,
+  },
+];
+
+const ventajas = [
+  {
+    titulo: 'El costo, que es nuestro diferencial',
+    texto: 'Construcción en seco bien hecha cuesta menos que la tradicional, y te lo pasamos a vos.',
+  },
+  {
+    titulo: 'Platea de hormigón incluida',
+    texto: 'La base va en el precio. No aparece después como un extra.',
+  },
+  {
+    titulo: 'Aislación con sistema EIFS',
+    texto: 'La casa queda envuelta por fuera: menos frío en invierno, menos calor en verano y menos gasto de energía.',
+  },
+  {
+    titulo: `Flete bonificado hasta ${sitio.fleteBonificadoKm} km`,
+    texto: 'Trabajamos en todo el país. Dentro de ese radio, el traslado no te lo cobramos.',
+  },
+  {
+    titulo: `${sitio.obrasEntregadas} casas entregadas`,
+    texto: 'No es un emprendimiento nuevo: es un sistema que ya repetimos cientos de veces.',
+  },
+  {
+    titulo: 'Vos elegís hasta dónde llegamos',
+    texto: 'Obra gris para terminarla a tu tiempo, o llave en mano para entrar con los muebles.',
+  },
+];
+---
+
+<Base
+  titulo="Smart Panel Constructora | Casas en Wood Frame en todo el país"
+  descripcion="Construimos tu casa en seco con sistema Wood Frame: obra gris con terminación exterior en 30 días o llave en mano. Platea incluida, aislación EIFS y más de 500 casas entregadas."
+>
+  <Hero />
+
+  <!-- ===================== LÍNEAS DEL CATÁLOGO ===================== -->
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="encabezado">
+        <span class="volanta">Catálogo</span>
+        <h2>Elegí por dónde empezar</h2>
+        <p class="encabezado__bajada">
+          {modelos.length} modelos repartidos en cuatro líneas. Cualquiera se puede adaptar a tu
+          terreno y a tu forma de vivir.
+        </p>
+      </div>
+
+      <div class="grilla grilla--auto">
+        {
+          lineas.map((linea) => (
+            <a class="linea" href={rutaLinea(linea.slug)}>
+              <span class="linea__cantidad">{conteo[linea.slug]} modelos</span>
+              <h3 class="linea__titulo">{linea.texto}</h3>
+              <span class="linea__ver" aria-hidden="true">Ver la línea →</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MODELOS DESTACADOS ===================== -->
+  {
+    destacados.length > 0 && (
+      <section class="seccion seccion--alt">
+        <div class="contenedor">
+          <div class="encabezado">
+            <span class="volanta">Modelos</span>
+            <h2>Ves tu casa antes de construirla: diseño y render personalizados</h2>
+            <p class="encabezado__bajada">
+              Cada modelo tiene su render frontal, su plano y sus metros. Si ninguno te cierra del
+              todo, lo ajustamos.
+            </p>
+          </div>
+
+          <Carrusel etiqueta="Modelos destacados" porVista={3}>
+            {destacados.map((modelo) => (
+              <TarjetaModelo modelo={modelo} />
+            ))}
+          </Carrusel>
+
+          <p class="seccion__pie">
+            <a class="boton boton--secundario" href="/modelos/">Ver el catálogo completo</a>
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ===================== POR QUÉ ELEGIRNOS ===================== -->
+  <section class="seccion seccion--contraste">
+    <div class="contenedor">
+      <div class="encabezado">
+        <span class="volanta">Por qué nosotros</span>
+        <h2>Construís por menos, sin resignar lo que importa</h2>
+        <p class="encabezado__bajada">
+          Nuestro diferencial es el costo. Para que eso no se note en la casa, no recortamos donde
+          se ve ni donde se siente.
+        </p>
+      </div>
+
+      <div class="grilla grilla--auto">
+        {
+          ventajas.map((ventaja) => (
+            <div class="ventaja">
+              <h3 class="ventaja__titulo">{ventaja.titulo}</h3>
+              <p class="ventaja__texto">{ventaja.texto}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== OBRA GRIS VS LLAVE EN MANO ===================== -->
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="encabezado">
+        <span class="volanta">Dos formas de construir</span>
+        <h2>¿Hasta dónde querés que lleguemos?</h2>
+        <p class="encabezado__bajada">
+          Las dos empiezan igual: platea, estructura Wood Frame y aislación. La diferencia está en
+          quién termina los interiores.
+        </p>
+      </div>
+
+      <div class="grilla grilla--2">
+        {
+          servicios.map((servicio) => (
+            <article class="servicio tarjeta">
+              <div class="tarjeta__cuerpo">
+                <span class="etiqueta">{servicio.plazo}</span>
+                <h3 class="servicio__titulo">{servicio.nombre}</h3>
+                <p class="texto-suave">{servicio.bajada}</p>
+                <p class="servicio__para">{servicio.paraQuien}</p>
+                <p class="servicio__accion">
+                  <a class="boton boton--primario" href={`/${servicio.slug}/`}>
+                    Ver qué incluye
+                  </a>
+                </p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="seccion__pie texto-suave">
+        ¿Tenés un proyecto propio o un plano hecho?
+        <a href="/contacto/">Lo cotizamos a medida</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== CÓMO TRABAJAMOS ===================== -->
+  <section class="seccion seccion--alt">
+    <div class="contenedor">
+      <div class="encabezado">
+        <span class="volanta">Cómo trabajamos</span>
+        <h2>Pagás a medida que ves avanzar tu casa</h2>
+      </div>
+
+      <ol class="pasos" role="list">
+        {
+          pasos.map((paso, indice) => (
+            <li class="paso">
+              <span class="paso__numero" aria-hidden="true">{indice + 1}</span>
+              <h3 class="paso__titulo">{paso.titulo}</h3>
+              <p class:list={['paso__texto', { pendiente: paso.texto.includes('[COMPLETAR]') }]}>
+                {paso.texto.replace('[COMPLETAR]', 'Falta definir:')}
+              </p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===================== OBRAS ===================== -->
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="encabezado">
+        <span class="volanta">Obras entregadas</span>
+        <h2>{sitio.obrasEntregadas} casas construidas y entregadas</h2>
+        <p class="encabezado__bajada">
+          Casas reales, en terrenos reales, de Córdoba al resto del país.
+        </p>
+      </div>
+
+      {
+        obras.length === 0 ? (
+          <div class="grilla grilla--auto">
+            <ImagenPlaceholder etiqueta="Foto de obra 1" relacion="4 / 3" />
+            <ImagenPlaceholder etiqueta="Foto de obra 2" relacion="4 / 3" />
+            <ImagenPlaceholder etiqueta="Foto de obra 3" relacion="4 / 3" />
+          </div>
+        ) : (
+          <div class="grilla grilla--auto">
+            {obras.slice(0, 3).map((obra) => (
+              <article class="tarjeta">
+                <ImagenPlaceholder etiqueta={obra.nombre} relacion="4 / 3" />
+                <div class="tarjeta__cuerpo">
+                  <h3>{obra.nombre}</h3>
+                  <p class="texto-suave">
+                    {obra.localidad}
+                    {obra.provincia && `, ${obra.provincia}`}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        )
+      }
+
+      <p class="seccion__pie">
+        <a class="boton boton--secundario" href="/obras/">Ver todas las obras</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== TESTIMONIOS ===================== -->
+  {/* Solo aparece con testimonios autorizados cargados en src/data/obras.json. */}
+  {
+    testimonios.length > 0 && (
+      <section class="seccion seccion--alt">
+        <div class="contenedor">
+          <div class="encabezado">
+            <span class="volanta">Lo que dicen</span>
+            <h2>Clientes que ya están viviendo en su casa</h2>
+          </div>
+
+          <div class="grilla grilla--auto">
+            {testimonios.map((testimonio) => (
+              <blockquote class="testimonio tarjeta">
+                <div class="tarjeta__cuerpo">
+                  <p class="testimonio__texto">{testimonio.texto}</p>
+                  <footer class="testimonio__autor texto-suave">
+                    {testimonio.autor} · {testimonio.localidad}
+                  </footer>
+                </div>
+              </blockquote>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ===================== PREGUNTAS FRECUENTES ===================== -->
+  {
+    preguntasPublicadas.length > 0 && (
+      <section class="seccion">
+        <div class="contenedor">
+          <div class="encabezado">
+            <span class="volanta">Preguntas frecuentes</span>
+            <h2>Lo que todos preguntan antes de empezar</h2>
+          </div>
+          <Faq preguntas={preguntasPublicadas} />
+        </div>
+      </section>
+    )
+  }
+
+  <SeccionCotizar />
+</Base>
+
+<style>
+  .seccion__pie {
+    margin-top: var(--espacio-6);
+  }
+
+  /* ---------- Líneas del catálogo ---------- */
+  .linea {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-2);
+    padding: var(--espacio-5);
+    background-color: var(--color-superficie);
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio-md);
+    text-decoration: none;
+    transition:
+      transform var(--transicion-media),
+      box-shadow var(--transicion-media),
+      border-color var(--transicion-media);
+  }
+
+  .linea:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-acento-texto);
+    box-shadow: var(--brillo);
+  }
+
+  .linea__cantidad {
+    font-size: var(--texto-xs);
+    font-weight: var(--peso-medio);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-acento-texto);
+  }
+
+  .linea__titulo {
+    font-size: var(--texto-lg);
+    font-weight: var(--peso-fuerte);
+  }
+
+  .linea__ver {
+    margin-top: auto;
+    padding-top: var(--espacio-4);
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-medio);
+    color: var(--color-enlace);
+  }
+
+  /* ---------- Ventajas ---------- */
+  .ventaja {
+    padding: var(--espacio-5);
+    background-color: rgb(255 255 255 / 0.06);
+    border-radius: var(--radio-md);
+  }
+
+  .ventaja__titulo {
+    font-size: var(--texto-md);
+    font-weight: var(--peso-fuerte);
+  }
+
+  .ventaja__texto {
+    margin-top: var(--espacio-2);
+    font-size: var(--texto-sm);
+    color: var(--color-inverso-suave);
+  }
+
+  /* ---------- Servicios ---------- */
+  .servicio__titulo {
+    font-size: var(--texto-xl);
+    font-weight: var(--peso-fuerte);
+    margin-top: var(--espacio-1);
+  }
+
+  .servicio__para {
+    padding-top: var(--espacio-3);
+    border-top: var(--borde-fino) solid var(--color-borde);
+    font-size: var(--texto-sm);
+  }
+
+  .servicio__accion {
+    margin-top: auto;
+    padding-top: var(--espacio-4);
+  }
+
+  /* ---------- Pasos ---------- */
+  .pasos {
+    display: grid;
+    gap: var(--espacio-5);
+    padding: 0;
+    list-style: none;
+    counter-reset: paso;
+  }
+
+  .paso {
+    display: grid;
+    gap: var(--espacio-2);
+    padding-top: var(--espacio-4);
+    border-top: var(--borde-grueso) solid var(--color-acento-texto);
+  }
+
+  .paso__numero {
+    font-family: var(--fuente-titulos);
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-fuerte);
+    color: var(--color-acento-texto);
+  }
+
+  .paso__titulo {
+    font-size: var(--texto-md);
+    font-weight: var(--peso-fuerte);
+  }
+
+  .paso__texto {
+    font-size: var(--texto-sm);
+    color: var(--color-texto-suave);
+  }
+
+  /* ---------- Testimonios ---------- */
+  .testimonio {
+    margin: 0;
+  }
+
+  .testimonio__texto {
+    font-size: var(--texto-md);
+  }
+
+  .testimonio__autor {
+    margin-top: var(--espacio-3);
+    font-size: var(--texto-sm);
+  }
+
+  @media (min-width: 40em) {
+    .pasos {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--espacio-6);
+    }
+  }
+
+  @media (min-width: 64em) {
+    .pasos {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,196 @@
+---
+/**
+ * Primer pantallazo del inicio: propuesta de valor, prueba de que es real
+ * y acción, todo visible sin scrollear.
+ *
+ * Celular: fondo oscuro, titular, un botón y un solo campo de WhatsApp.
+ * Escritorio: se suma la columna con el video (o su placeholder) y el
+ * paso 1 completo del formulario.
+ *
+ * El video se activa solo cuando "heroVideo" tenga nombre de archivo en
+ * src/data/sitio.json (el archivo va en public/video/). Mientras esté
+ * vacío se muestra el placeholder, sin descargar nada.
+ */
+import FormularioLead from './FormularioLead.astro';
+import ImagenPlaceholder from './ImagenPlaceholder.astro';
+import { sitio, dato, enlaceCotizar } from '../lib/sitio';
+
+const video = dato(sitio.heroVideo);
+const poster = dato(sitio.heroPoster);
+
+const confianza = [
+  { numero: sitio.obrasEntregadas, etiqueta: 'casas entregadas' },
+  { numero: sitio.plazoObraGris, etiqueta: 'de obra gris' },
+  { numero: 'Platea', etiqueta: 'de hormigón incluida' },
+  { numero: `${sitio.fleteBonificadoKm} km`, etiqueta: 'de flete bonificado' },
+];
+---
+
+<section class="hero">
+  <div class="contenedor hero__grilla">
+    <div class="hero__texto">
+      <span class="volanta">Construcción en seco · Wood Frame</span>
+      <h1>Tu casa, a tu estilo.<br />Con el costo claro desde el primer día.</h1>
+      <p class="hero__bajada">
+        Diseñamos y construimos tu casa con el sistema Wood Frame: obra gris con terminación
+        exterior en 30 días o llave en mano, lista para habitar. Vos elegís hasta dónde llegamos.
+      </p>
+
+      <div class="hero__botones">
+        <a class="boton boton--primario" href="/modelos/">Ver modelos</a>
+        <a class="boton boton--secundario boton--inverso" href={enlaceCotizar}>Cotizar mi casa</a>
+      </div>
+
+      <div class="hero__form">
+        <FormularioLead variante="hero" />
+      </div>
+    </div>
+
+    <div class="hero__media">
+      {
+        video ? (
+          <video
+            class="hero__video"
+            src={`/video/${video}`}
+            poster={poster ? `/video/${poster}` : undefined}
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            aria-label="Obras de Smart Panel Constructora"
+          />
+        ) : (
+          <ImagenPlaceholder
+            etiqueta="Video del hero (pendiente de edición)"
+            tipo="casa"
+            relacion="4 / 3"
+            oscuro
+          />
+        )
+      }
+    </div>
+  </div>
+
+  <div class="contenedor">
+    <ul class="hero__confianza" role="list">
+      {
+        confianza.map((item) => (
+          <li class="dato">
+            <span class="dato__numero">{item.numero}</span>
+            <span class="dato__etiqueta">{item.etiqueta}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    background-color: var(--color-oscuro);
+    color: var(--color-inverso);
+    padding-block: var(--espacio-7) var(--espacio-6);
+    /* Resplandor del color secundario: da profundidad sin salir de la marca */
+    background-image:
+      radial-gradient(90% 70% at 90% -10%, rgb(10 61 77 / 0.95) 0%, transparent 65%),
+      radial-gradient(60% 50% at -10% 100%, rgb(10 61 77 / 0.5) 0%, transparent 70%);
+    overflow: hidden;
+  }
+
+  .hero :is(h1) {
+    color: var(--color-inverso);
+  }
+
+  .hero__grilla {
+    display: grid;
+    gap: var(--espacio-6);
+  }
+
+  .hero__bajada {
+    max-width: 48ch;
+    margin-top: var(--espacio-4);
+    font-size: var(--texto-md);
+    color: var(--color-inverso-suave);
+  }
+
+  .hero__botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio-3);
+    margin-top: var(--espacio-6);
+  }
+
+  /* Tarjeta clara con el paso 1: la acción tiene que verse sin scrollear */
+  .hero__form {
+    margin-top: var(--espacio-6);
+    padding: var(--espacio-5);
+    background-color: rgb(8 32 48 / 0.72);
+    backdrop-filter: blur(16px);
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio-lg);
+    box-shadow: var(--brillo);
+  }
+
+  /* Celular: el video no se descarga ni se muestra */
+  .hero__media {
+    display: none;
+  }
+
+  .hero__video {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radio-lg);
+  }
+
+  /* ---------- Cinta de confianza ---------- */
+  .hero__confianza {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--espacio-5);
+    margin-top: var(--espacio-7);
+    padding-top: var(--espacio-5);
+    border-top: var(--borde-fino) solid var(--color-borde);
+    padding-inline: 0;
+    list-style: none;
+  }
+
+  .hero__confianza .dato__numero {
+    color: var(--color-inverso);
+  }
+
+  .hero__confianza .dato__etiqueta {
+    color: var(--color-inverso-suave);
+  }
+
+  /* ---------- Tablet ---------- */
+  @media (min-width: 40em) {
+    .hero {
+      padding-block: var(--espacio-8) var(--espacio-6);
+    }
+
+    .hero__confianza {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* ---------- Escritorio: dos columnas y video ---------- */
+  @media (min-width: 64em) {
+    .hero__grilla {
+      grid-template-columns: 1.15fr 1fr;
+      align-items: center;
+      gap: var(--espacio-7);
+    }
+
+    .hero__media {
+      display: block;
+    }
+
+    .hero__form {
+      position: relative;
+      z-index: 1;
+    }
+  }
+</style>

@@ -1,0 +1,141 @@
+---
+/**
+ * Política de privacidad.
+ *
+ * BORRADOR: es una base razonable para un sitio que solo recibe consultas
+ * por formulario y WhatsApp. Antes de publicarla hay que completar la
+ * razón social y el CUIT en src/data/sitio.json, y conviene que la revise
+ * un abogado o contador. Si se activan Meta Pixel o Google Analytics,
+ * revisar la sección "Cookies y medición".
+ */
+import Base from '../layouts/Base.astro';
+import Migas from '../components/Migas.astro';
+import { sitio, dato } from '../lib/sitio';
+
+const email = dato(sitio.email);
+const razonSocial = sitio.razonSocial;
+const cuit = sitio.cuit;
+const analiticaActiva = Boolean(dato(sitio.googleAnalyticsId) || dato(sitio.metaPixelId));
+
+// Fecha de la última edición de esta página, para mostrarla al pie.
+const actualizado = new Date().toLocaleDateString('es-AR', {
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<Base
+  titulo="Política de privacidad"
+  descripcion="Qué datos personales recibimos a través del sitio de Smart Panel Constructora, para qué los usamos y cómo pedir que los borremos."
+  noIndexar={false}
+>
+  <header class="seccion cabecera">
+    <div class="contenedor">
+      <Migas pasos={[{ texto: 'Inicio', href: '/' }, { texto: 'Privacidad' }]} />
+      <h1>Política de privacidad</h1>
+      <p class="encabezado__bajada">Última actualización: {actualizado}.</p>
+    </div>
+  </header>
+
+  <section class="seccion">
+    <div class="contenedor prosa">
+      <h2>Quién es responsable de tus datos</h2>
+      <p>
+        El responsable de los datos que se recogen en este sitio es
+        <strong>{razonSocial}</strong> (CUIT {cuit}), que opera comercialmente como Smart Panel
+        Constructora.
+      </p>
+
+      <h2>Qué datos recibimos</h2>
+      <p>Solo los que nos dejás vos, a través del formulario de cotización:</p>
+      <ul>
+        <li>Tu nombre y tu número de WhatsApp.</li>
+        <li>Tu localidad y si tenés terreno.</li>
+        <li>
+          Los datos del proyecto: metros a construir, cantidad de habitaciones, servicio que te
+          interesa, para cuándo querés construir, modelo de interés y el mensaje que escribas.
+        </li>
+      </ul>
+      <p>
+        No pedimos datos de documento, bancarios ni de tarjeta en ningún momento, y el sitio no
+        tiene usuarios ni contraseñas.
+      </p>
+
+      <h2>Para qué los usamos</h2>
+      <p>
+        Para responderte la consulta, armarte la cotización y hacer el seguimiento comercial de ese
+        pedido. Nada más. No vendemos, alquilamos ni cedemos tus datos a terceros para que te
+        ofrezcan otra cosa.
+      </p>
+
+      <h2>Dónde se guardan</h2>
+      <p>
+        Las consultas del formulario se guardan en una planilla de Google Sheets a la que accede
+        solo el equipo de Smart Panel. La conversación que sigue se da por WhatsApp, con las
+        condiciones de privacidad de esa aplicación.
+      </p>
+
+      <h2>Cuánto tiempo los guardamos</h2>
+      <p>
+        Mientras la consulta esté activa y por un tiempo razonable después, para poder retomarla si
+        volvés a escribir. Si nos pedís que los borremos, los borramos.
+      </p>
+
+      <h2>Cookies y medición</h2>
+      {
+        analiticaActiva ? (
+          <p>
+            Usamos herramientas de medición de terceros para entender cómo se usa el sitio y para
+            medir el resultado de nuestra publicidad. Esas herramientas pueden guardar cookies en
+            tu navegador. Podés bloquearlas desde la configuración de tu navegador sin que eso
+            afecte el uso del sitio.
+          </p>
+        ) : (
+          <p>
+            Este sitio no usa cookies de publicidad ni herramientas de medición de terceros. No hay
+            seguimiento de tu navegación.
+          </p>
+        )
+      }
+
+      <h2>Tus derechos</h2>
+      <p>
+        Según la Ley 25.326 de Protección de los Datos Personales, podés pedirnos en cualquier
+        momento acceder a los datos que tenemos sobre vos, corregirlos o que los borremos.
+        {
+          email ? (
+            <>
+              {' '}Escribinos a <a href={`mailto:${email}`}>{email}</a> o por WhatsApp al{' '}
+              {sitio.whatsapp.visible} y lo resolvemos.
+            </>
+          ) : (
+            <> Escribinos por WhatsApp al {sitio.whatsapp.visible} y lo resolvemos.</>
+          )
+        }
+      </p>
+      <p>
+        La Agencia de Acceso a la Información Pública es el organismo de control de esa ley y
+        atiende las denuncias de quien considere que sus datos no fueron tratados como corresponde.
+      </p>
+
+      <h2>Cambios en esta política</h2>
+      <p>
+        Si cambiamos algo, actualizamos esta página y la fecha de arriba. Te recomendamos revisarla
+        si volvés a dejarnos una consulta más adelante.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cabecera {
+    padding-bottom: 0;
+  }
+
+  .prosa ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-2);
+    padding-left: var(--espacio-5);
+  }
+</style>

@@ -1,0 +1,111 @@
+---
+/**
+ * Layout base de todas las páginas: <head> con SEO, fuentes, estilos,
+ * header, footer y botón flotante de WhatsApp.
+ */
+import '@fontsource/montserrat/latin-600.css';
+import '@fontsource/montserrat/latin-700.css';
+import '@fontsource/montserrat/latin-800.css';
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-600.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFlotante from '../components/WhatsAppFlotante.astro';
+import { sitio, dato } from '../lib/sitio';
+
+interface Props {
+  /** Título de la página (sin el nombre de la marca, se agrega solo). */
+  titulo: string;
+  /** Meta description única por página (ideal: 140-160 caracteres). */
+  descripcion: string;
+  /** Imagen para compartir en redes (ruta absoluta o relativa al sitio). */
+  imagen?: string;
+  /** Mensaje del botón flotante de WhatsApp (ej.: con el nombre del modelo). */
+  mensajeWhatsApp?: string;
+  /** true para que Google no indexe la página (ej.: 404). */
+  noIndexar?: boolean;
+}
+
+const { titulo, descripcion, imagen, mensajeWhatsApp, noIndexar = false } = Astro.props;
+
+// En el inicio el título ya trae la propuesta de valor; en el resto se suma la marca.
+const tituloCompleto = titulo.includes(sitio.nombre) ? titulo : `${titulo} | ${sitio.nombre}`;
+
+// Con dominio definido se generan URLs absolutas (canonical, og:url, og:image).
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const imagenOg = imagen && Astro.site ? new URL(imagen, Astro.site).href : undefined;
+
+// Analítica: solo se activa cuando el ID está cargado en sitio.json.
+const pixelId = dato(sitio.metaPixelId);
+const gaId = dato(sitio.googleAnalyticsId);
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {noIndexar && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <meta name="theme-color" content="#020c1c" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content={sitio.nombre} />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {imagenOg && <meta property="og:image" content={imagenOg} />}
+    <meta name="twitter:card" content={imagenOg ? 'summary_large_image' : 'summary'} />
+
+    <!--
+      Meta Pixel y Google Analytics: se activan solos al cargar el ID en
+      src/data/sitio.json (metaPixelId / googleAnalyticsId). Mientras diga
+      "[COMPLETAR]" no se carga nada. Antes de activarlos revisar /privacidad/.
+    -->
+    {
+      gaId && (
+        <>
+          <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
+          <script is:inline define:vars={{ gaId }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', gaId);
+          </script>
+        </>
+      )
+    }
+    {
+      pixelId && (
+        <script is:inline define:vars={{ pixelId }}>
+          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+          n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+          document,'script','https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', pixelId);
+          fbq('track', 'PageView');
+        </script>
+      )
+    }
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <Header />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer />
+    <WhatsAppFlotante mensaje={mensajeWhatsApp} />
+  </body>
+</html>
